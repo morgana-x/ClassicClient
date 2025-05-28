@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassicBot", "ClassicBot\ClassicBot.csproj", "{1C8FF7C2-1836-47BA-89F2-6C7CB262BB3B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassicConnect", "ClassicClient\ClassicConnect.csproj", "{534C9322-CC50-4D59-849A-BFB17B5D92B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C8FF7C2-1836-47BA-89F2-6C7CB262BB3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C8FF7C2-1836-47BA-89F2-6C7CB262BB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C8FF7C2-1836-47BA-89F2-6C7CB262BB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C8FF7C2-1836-47BA-89F2-6C7CB262BB3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{534C9322-CC50-4D59-849A-BFB17B5D92B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{534C9322-CC50-4D59-849A-BFB17B5D92B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{534C9322-CC50-4D59-849A-BFB17B5D92B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{534C9322-CC50-4D59-849A-BFB17B5D92B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5F0191A-9D48-4F30-96AC-A383EAC45E56}
+	EndGlobalSection
+EndGlobal
