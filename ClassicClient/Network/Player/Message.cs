@@ -28,7 +28,7 @@ namespace ClassicConnect.Network.Player
         public override void Read(ClassicClient connection, Stream stream)
         {
             sbyte playerId = (sbyte)stream.ReadByte();
-            string message = Util.DecodeString(stream);
+            string message = Util.ReadString(stream);
 
             connection.Events.PlayerEvents.OnPlayerChat(new(playerId, message));
         }

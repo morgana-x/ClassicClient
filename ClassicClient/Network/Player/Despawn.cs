@@ -6,7 +6,8 @@
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            int playerId = (sbyte)stream.ReadByte();
+            sbyte playerId = (sbyte)stream.ReadByte();
+            connection.PlayerList.PlayerDespawn(playerId);
         }
     }
 }

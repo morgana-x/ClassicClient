@@ -6,9 +6,11 @@
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            int playerId = (sbyte)stream.ReadByte();
+            sbyte playerId = (sbyte)stream.ReadByte();
             byte yaw = (byte)stream.ReadByte();
             byte pitch = (byte)stream.ReadByte();
+
+            connection.PlayerList.UpdateRot(playerId, yaw, pitch);
         }
 
     }

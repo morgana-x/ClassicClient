@@ -10,5 +10,7 @@
         public int UserType = 0x0; // 0x64 for op
 
         public bool CPE = false;
+
+        public List<string> CPEExtensions = new List<string>();
     }
 }

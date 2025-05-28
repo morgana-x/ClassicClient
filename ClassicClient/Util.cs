@@ -4,6 +4,44 @@ namespace ClassicConnect
 {
     public class Util
     {
+        public static bool CPE = false;
+        public static bool FullCP437 = false;
+
+        // https://github.com/ClassiCube/MCGalaxy/blob/master/MCGalaxy/Chat/EmotesHandler.cs#L46
+       
+        /// <summary> Conversion for code page 437 characters from index 0 to 31 to unicode. </summary>
+        public const string ControlCharReplacements = "\0☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼";
+
+        /// <summary> Conversion for code page 437 characters from index 127 to 255 to unicode. </summary>
+        public const string ExtendedCharReplacements = "⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»" +
+            "░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌" +
+            "█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■\u00a0";
+
+        public static byte EncodeCP437(char c)
+        {
+            if (c >= ' ' && c <= '~') return (byte)c;
+            int cpIndex = 0;
+            if ((cpIndex = ControlCharReplacements.IndexOf(c)) >= 0)
+                return (byte)cpIndex;
+
+            if ((cpIndex = ExtendedCharReplacements.IndexOf(c)) >= 0)
+                return (byte)cpIndex;
+
+            return (byte)'?';
+
+        }
+        public static byte[] EncodeCP437(string input)
+        {
+            List<byte> encoded = new List<byte>();
+            foreach (var a in input)
+                encoded.Add(EncodeCP437(a));
+
+            return encoded.ToArray();
+        }
+        public static string DecodeCP437(byte[] input)
+        {
+            return Encoding.ASCII.GetString(input);
+        }
         private static byte[] EncodeString(byte[] rawBytes)
         {
             byte[] converted = new byte[64];
@@ -14,12 +52,12 @@ namespace ClassicConnect
         }
         public static byte[] EncodeString(string input)
         {
-            return EncodeString(Encoding.ASCII.GetBytes(input));
+            return EncodeString( FullCP437 ? EncodeCP437(input) : Encoding.ASCII.GetBytes(input));
         }
         public static byte[][] EncodeStringMultiline(string input)
         {
             List<byte[]> convertedBytes = new List<byte[]>();
-            byte[] rawbytes = Encoding.ASCII.GetBytes(input);
+            byte[] rawbytes = FullCP437 ? EncodeCP437(input) : Encoding.ASCII.GetBytes(input);
 
             for (int i=0;i<rawbytes.Length; i += 64)
                 convertedBytes.Add(EncodeString(rawbytes.Skip(i*64).ToArray()));
@@ -29,10 +67,10 @@ namespace ClassicConnect
 
         public static string DecodeString(byte[] input)
         {
-            return Encoding.ASCII.GetString(input).TrimEnd();
+            return FullCP437 ? DecodeCP437(input).TrimEnd() : Encoding.ASCII.GetString(input).TrimEnd();
         }
 
-        public static string DecodeString(Stream stream)
+        public static string ReadString(Stream stream)
         {
             byte[] buffer = new byte[64];
             stream.Read(buffer);
@@ -54,6 +92,15 @@ namespace ClassicConnect
         {
             Array.Reverse(bytes);
             return bytes;
+        }
+
+        public static short ReadShort(Stream stream, bool bigendian=true)
+        {
+            return BitConverter.ToInt16(ReadBytes(stream, 2, bigendian));
+        }
+        public static int ReadInt(Stream stream, bool bigendian = true)
+        {
+            return BitConverter.ToInt32(ReadBytes(stream, 4, bigendian));
         }
 
         public static void InsertBytes(ref byte[] target, int index, byte[] insert)

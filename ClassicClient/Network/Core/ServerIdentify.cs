@@ -7,8 +7,8 @@
         {
             connection.ConnectedServer.ServerProtocol = stream.ReadByte();
 
-            connection.ConnectedServer.ServerName = Util.DecodeString(stream);
-            connection.ConnectedServer.ServerMotd = Util.DecodeString(stream);
+            connection.ConnectedServer.ServerName = Util.ReadString(stream);
+            connection.ConnectedServer.ServerMotd = Util.ReadString(stream);
 
             connection.ConnectedServer.UserType = stream.ReadByte();
         }
