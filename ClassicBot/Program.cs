@@ -53,7 +53,7 @@ public partial class Program
         client.Events.CoreEvents.DisconnectEvent += OnKick;
         client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
-        client.Connect("142.93.199.238:25589");//"131.161.69.89:25566");
+        client.Connect("167.114.174.122:25552");//"142.93.199.238:25589");//"131.161.69.89:25566");
 
         while (client.Client.Connected)
         {
