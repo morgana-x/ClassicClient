@@ -103,6 +103,14 @@ namespace ClassicConnect
             return BitConverter.ToInt32(ReadBytes(stream, 4, bigendian));
         }
 
+        public static int ReadInt(byte[] data, int offset, bool bigendian = true)
+        {
+            byte[] buffer = new byte[4];
+            Array.Copy(data, offset, buffer, 0, 4);
+            Array.Reverse(buffer);
+            return BitConverter.ToInt32(buffer);
+        }
+
         public static void InsertBytes(ref byte[] target, int index, byte[] insert)
         {
             for (int i=0; i<insert.Length && i+index < target.Length; i++)

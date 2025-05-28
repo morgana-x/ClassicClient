@@ -57,6 +57,10 @@ namespace ClassicConnect
             return (short)(Data[x * Width + z * Width * Height + y]);
         }
 
+        public void SetBlock(int indice, byte block)
+        {
+            Data[indice] = block;
+        }
         public void SetBlock(short x, short y, short z, byte block)
         {
             if (Loading) return;

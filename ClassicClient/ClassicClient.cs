@@ -65,7 +65,7 @@ namespace ClassicConnect
         public void SendBytes(byte[] bytes)
         {
             if (!Client.Connected) return;
-            Console.WriteLine("Sending bytes " + string.Join(", ", bytes));
+           // Console.WriteLine("Sending bytes " + string.Join(", ", bytes));
             NetworkStream.Write(bytes);
         }
 

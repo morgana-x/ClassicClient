@@ -51,6 +51,7 @@ public partial class Program
         client.Events.LevelEvents.LoadChunkEvent += OnLoadChunk;
         client.Events.LevelEvents.OnFinishLoadEvent += OnFinishLoad;
         client.Events.CoreEvents.DisconnectEvent += OnKick;
+        client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
         client.Connect("142.93.199.238:25589");//"131.161.69.89:25566");
 
