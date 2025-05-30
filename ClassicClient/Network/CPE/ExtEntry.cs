@@ -5,10 +5,12 @@ namespace ClassicConnect.Network.CPE
     {
         public override byte PacketID => 0x11;
 
-        public override void Read(ClassicClient connection, Stream stream)
+        public override void Read(ClassicClient connection, Stream rawstream)
         {
-            string name = Util.ReadString(stream);
-            int version = BitConverter.ToInt32(Util.ReadBytes(stream, 4, true));
+            byte[] data = Util.ReadBytes(rawstream, 68);
+
+            string name = Util.ReadString(data);
+            int version = Util.ReadInt(data, 64);
 
             Console.WriteLine($"Received ExtEntry {name} {version}");
             if (!connection.ConnectedServer.CPEExtensions.Contains(name))

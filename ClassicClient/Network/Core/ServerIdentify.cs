@@ -5,12 +5,14 @@
         public override byte PacketID => 0x0;
         public override void Read(ClassicClient connection, Stream stream)
         {
-            connection.ConnectedServer.ServerProtocol = stream.ReadByte();
+            byte[] data = Util.ReadBytes(stream, 130);// new byte[130];
 
-            connection.ConnectedServer.ServerName = Util.ReadString(stream);
-            connection.ConnectedServer.ServerMotd = Util.ReadString(stream);
+            connection.ConnectedServer.ServerProtocol = data[0];//stream.ReadByte();
 
-            connection.ConnectedServer.UserType = stream.ReadByte();
+            connection.ConnectedServer.ServerName = Util.ReadString(data,1);
+            connection.ConnectedServer.ServerMotd = Util.ReadString(data, 65);
+
+            connection.ConnectedServer.UserType = data[129];
         }
     }
 }

@@ -12,9 +12,11 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            byte block = (byte)stream.ReadByte();
-            byte allowPlace = (byte)stream.ReadByte();
-            byte allowBreak = (byte)stream.ReadByte();
+            byte[] data = Util.ReadBytes(stream, 3);
+
+            byte block = data[0];
+            byte allowPlace = data[1];
+            byte allowBreak = data[2];
         }
     }
 }

@@ -42,8 +42,8 @@ public partial class Program
     public static void Main(string[] args)
     {
         string name = "morgana";
-        string mppass = "";
-        ClassicClient client = new ClassicClient(name, mppass);
+        string password = "";
+        ClassicClient client = new ClassicClient(name);//, password);
         client.Events.PlayerEvents.ChatEvent += OnMessage;
         client.Events.PlayerEvents.SpawnEvent += OnPlayerSpawn;
         client.Events.PlayerEvents.DepawnEvent += OnPlayerDespawn;
@@ -53,7 +53,13 @@ public partial class Program
         client.Events.CoreEvents.DisconnectEvent += OnKick;
         client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
-        client.Connect("167.114.174.122:25552");//"142.93.199.238:25589");//"131.161.69.89:25566");
+        bool result = client.Connect("localhost", 25565);// "51.195.219.231", 25565, "ed9bb1717a0caae1904bfde4c53638e6");
+
+        if (!result)
+        {
+            Console.WriteLine("Failed to connect!");
+            return;
+        }
 
         while (client.Client.Connected)
         {

@@ -12,9 +12,11 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
+            byte[] data = Util.ReadBytes(stream, 7);
+
             byte[] settings = new byte[5];
-            stream.Read(settings);
-            short jumpheight = Util.ReadShort(stream);
+            Array.Copy(data, settings, 5);
+            short jumpheight = Util.ReadShort(data, 5);
         }
     }
 }

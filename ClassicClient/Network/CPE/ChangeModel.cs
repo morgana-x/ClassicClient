@@ -12,8 +12,10 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            byte entityID = (byte)stream.ReadByte();
-            string model = Util.ReadString(stream);
+            byte[] data = Util.ReadBytes(stream, 65);
+
+            byte entityID = data[0];
+            string model = Util.ReadString(data,1);
         }
     }
 }

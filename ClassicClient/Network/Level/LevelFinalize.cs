@@ -7,9 +7,11 @@ namespace ClassicConnect.Network.Level
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            short width  = BitConverter.ToInt16(Util.ReadBytes(stream, 2, true));
-            short height = BitConverter.ToInt16(Util.ReadBytes(stream, 2, true));
-            short length = BitConverter.ToInt16(Util.ReadBytes(stream, 2, true));
+            byte[] data = Util.ReadBytes(stream, 6);
+
+            short width = Util.ReadShort(data, 0);
+            short height = Util.ReadShort(data, 2);
+            short length = Util.ReadShort(data, 4);
 
             connection.Level.FinishLoading(width, height, length);
             connection.Events.LevelEvents.OnFinishLoad(new());

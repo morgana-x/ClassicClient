@@ -6,8 +6,10 @@ namespace ClassicConnect.Network.CPE
         public override byte PacketID { get { return 0x10; } }
         public override void Read(ClassicClient connection, Stream stream)
         {
-            string appname = Util.ReadString(stream);
-            short extensionCount = Util.ReadShort(stream);
+            byte[] data = Util.ReadBytes(stream, 66);
+
+            string appname = Util.ReadString(data);
+            short extensionCount = Util.ReadShort(data, 64);
 
             Console.WriteLine("Received" + extensionCount.ToString() + "extension count");
 

@@ -7,13 +7,17 @@ namespace ClassicConnect.Network.Player
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            sbyte playerId = (sbyte)stream.ReadByte();
-            string playername = Util.ReadString(stream);
-            short x = BitConverter.ToInt16(Util.ReadBytes(stream, 2, true));
-            short y = BitConverter.ToInt16(Util.ReadBytes(stream, 2, true));
-            short z = BitConverter.ToInt16(Util.ReadBytes(stream, 2, true));
-            byte yaw = (byte)stream.ReadByte();
-            byte pitch = (byte)stream.ReadByte();
+            byte[] data = Util.ReadBytes(stream, 73);
+
+            sbyte playerId = (sbyte)data[0];
+            string playername = Util.ReadString(data,1);
+
+            short x = Util.ReadShort(data, 65);
+            short y = Util.ReadShort(data, 67);
+            short z = Util.ReadShort(data, 69);
+
+            byte yaw = (byte)data[71];
+            byte pitch = (byte)data[72];
 
             connection.PlayerList.PlayerSpawn(playerId, playername, x, y, z, yaw, pitch);
         }

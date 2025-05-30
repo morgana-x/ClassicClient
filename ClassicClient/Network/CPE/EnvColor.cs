@@ -6,10 +6,12 @@
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            byte v = (byte)stream.ReadByte();
-            short r = Util.ReadShort(stream);
-            short g = Util.ReadShort(stream);
-            short b = Util.ReadShort(stream);
+            byte[] data = Util.ReadBytes(stream, 7);
+
+            byte v = data[0];
+            short r = Util.ReadShort(data,1);
+            short g = Util.ReadShort(data,3);
+            short b = Util.ReadShort(data,5);
             connection.Level.SetEnvColor(v, r, g, b);
         }
     }

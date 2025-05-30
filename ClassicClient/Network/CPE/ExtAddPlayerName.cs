@@ -12,11 +12,12 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            short nameid = Util.ReadShort(stream);
+            byte[] data = Util.ReadBytes(stream, 195);
+            /*short nameid = Util.ReadShort(stream);
             string playername = Util.ReadString(stream);
             string listname = Util.ReadString(stream);
             string groupname = Util.ReadString(stream);
-            byte rank = (byte)stream.ReadByte();
+            byte rank = (byte)stream.ReadByte();*/
         }
     }
 }

@@ -6,16 +6,14 @@
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            short chunklength = BitConverter.ToInt16(Util.ReadBytes(stream, 2, true));
+            byte[] data = Util.ReadBytes(stream, 1027);
+
+            short chunklength = Util.ReadShort(data);
           
-
-            byte[] chunkbuffer = new byte[1024];
-            stream.Read(chunkbuffer);
-
-            byte percentComplete = (byte)stream.ReadByte();
-
             byte[] chunkdata = new byte[chunklength];
-            Array.Copy(chunkbuffer, chunkdata, chunklength);
+            Array.Copy(data, 2, chunkdata, 0, chunklength);
+
+            byte percentComplete = data[1026];
 
             connection.Level.LoadChunk(chunkdata);
 

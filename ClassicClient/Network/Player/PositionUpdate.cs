@@ -6,10 +6,11 @@
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            sbyte playerid = (sbyte)stream.ReadByte();
-            sbyte dx = (sbyte)stream.ReadByte();
-            sbyte dy = (sbyte)stream.ReadByte();
-            sbyte dz = (sbyte)stream.ReadByte();
+            byte[] data = Util.ReadBytes(stream, 4);
+            sbyte playerid = (sbyte)data[0];
+            sbyte dx = (sbyte)data[1];
+            sbyte dy = (sbyte)data[2];
+            sbyte dz = (sbyte)data[3];
 
             connection.PlayerList.UpdatePos(playerid, dx, dy, dz);
         }

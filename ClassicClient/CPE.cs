@@ -60,7 +60,7 @@ namespace ClassicConnect
             //["FastMap"] = false,
             //["ExtendedTextures"] = false,
             //["SetHotbar"] = false,
-            ["BulkBlockUpdate"] = false,
+            //["BulkBlockUpdate"] = false,
             ["SetSpawnpoint"] = false,
             //["VelocityControl"] = false,
             //["CustomParticles"] = false,

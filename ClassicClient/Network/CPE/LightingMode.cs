@@ -12,8 +12,10 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            byte lightingmode = (byte)stream.ReadByte();
-            byte locked = (byte)stream.ReadByte();
+            byte[] data = Util.ReadBytes(stream,2);
+
+            byte lightingmode = data[0];
+            byte locked = data[1];
         }
     }
 }

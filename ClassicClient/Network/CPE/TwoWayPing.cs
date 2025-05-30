@@ -12,8 +12,11 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            byte direction = (byte)stream.ReadByte();
-            short data = Util.ReadShort(stream);
+            byte[] data = Util.ReadBytes(stream, 3);
+
+            byte direction = data[0];
+
+            short someData = Util.ReadShort(data,1);
 
             if (direction != 0)
                 connection.SendBytes(GetBytes());

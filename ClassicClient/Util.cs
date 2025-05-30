@@ -59,8 +59,8 @@ namespace ClassicConnect
             List<byte[]> convertedBytes = new List<byte[]>();
             byte[] rawbytes = FullCP437 ? EncodeCP437(input) : Encoding.ASCII.GetBytes(input);
 
-            for (int i=0;i<rawbytes.Length; i += 64)
-                convertedBytes.Add(EncodeString(rawbytes.Skip(i*64).ToArray()));
+            for (int i=0; i< rawbytes.Length; i += 64)
+                convertedBytes.Add(EncodeString(rawbytes.Skip(i).ToArray()));
 
             return convertedBytes.ToArray();
         }
@@ -74,6 +74,13 @@ namespace ClassicConnect
         {
             byte[] buffer = new byte[64];
             stream.Read(buffer);
+            return DecodeString(buffer);
+        }
+
+        public static string ReadString(byte[] array, int index = 0)
+        {
+            byte[] buffer = new byte[64];
+            Array.Copy(array, index, buffer, 0, 64);
             return DecodeString(buffer);
         }
 
@@ -98,16 +105,26 @@ namespace ClassicConnect
         {
             return BitConverter.ToInt16(ReadBytes(stream, 2, bigendian));
         }
+        public static short ReadShort(byte[] data, int offset=0, bool bigendian = true)
+        {
+            byte[] buffer = new byte[2];
+            Array.Copy(data, offset, buffer, 0, 2);
+            if (bigendian)
+                Array.Reverse(buffer);
+            return BitConverter.ToInt16(buffer);
+        }
+
         public static int ReadInt(Stream stream, bool bigendian = true)
         {
             return BitConverter.ToInt32(ReadBytes(stream, 4, bigendian));
         }
 
-        public static int ReadInt(byte[] data, int offset, bool bigendian = true)
+        public static int ReadInt(byte[] data, int offset=0, bool bigendian = true)
         {
             byte[] buffer = new byte[4];
             Array.Copy(data, offset, buffer, 0, 4);
-            Array.Reverse(buffer);
+            if (bigendian)
+                Array.Reverse(buffer);
             return BitConverter.ToInt32(buffer);
         }
 

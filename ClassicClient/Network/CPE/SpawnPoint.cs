@@ -12,12 +12,14 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
+            byte[] data = Util.ReadBytes(stream, 8);
+
             short[] spawn = new short[3];
             for (int i = 0; i < 3; i++)
-                spawn[i] = Util.ReadShort(stream);
+                spawn[i] = Util.ReadShort(data, i*2);
 
-            byte yaw = (byte)stream.ReadByte();
-            byte pitch = (byte)stream.ReadByte();
+            byte yaw = data[6];
+            byte pitch = data[7];
         }
     }
 }

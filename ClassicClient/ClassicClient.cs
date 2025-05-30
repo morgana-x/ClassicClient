@@ -8,7 +8,7 @@ namespace ClassicConnect
     public class ClassicClient
     {
         public string Name;
-        string Verification;
+        string Verification = "None";
    
         public ClassicServer ConnectedServer = new ClassicServer();
 
@@ -23,16 +23,25 @@ namespace ClassicConnect
 
         private Task connectionTask;
 
-        public ClassicClient(string name, string mppass="")
+        public ClassicClient(string name)
         {
             Name = name;
             ClassicPacketHandler.RegisterPackets();
             LocalPlayer = new ClassicPlayer(-1, name, 0, 0, 0, 0, 0);
             PlayerList = new ClassicPlayerList(this,LocalPlayer);
-            Verification = mppass;
         }
 
-        public void Connect(string ip)
+        public ClassicClient(string name, string password)
+        {
+            Name = name;
+            ClassicubeAPI.Login(name, password);
+            ClassicPacketHandler.RegisterPackets();
+            LocalPlayer = new ClassicPlayer(-1, name, 0, 0, 0, 0, 0);
+            PlayerList = new ClassicPlayerList(this, LocalPlayer);
+
+        }
+
+        public bool Connect(string ip, string mppass="")
         {
             int port = 25566;
             if (ip.Contains(":"))
@@ -41,18 +50,49 @@ namespace ClassicConnect
                 ip = split[0];
                 port = int.Parse(split[1]);
             }
-            Connect(ip, port);
+            return Connect(ip, port, mppass);
         }
-        public void Connect(string ip, int port=25566)
+        public bool Connect(string ip, int port=25566, string mppass="")
         {
-            
-            Client = new TcpClient(ip, port);
-            NetworkStream = Client.GetStream();
+            if (mppass == "")
+                mppass = Verification;
+            try
+            {
+                Client = new TcpClient(ip, port);
+                NetworkStream = Client.GetStream();
 
-            SendBytes(Network.Core.ClientIdentify.GetBytes(this.Name, Verification, true));
-            ClassicPacketHandler.ReadPacket(this, NetworkStream);
+                SendBytes(Network.Core.ClientIdentify.GetBytes(this.Name, mppass, true));
+                ClassicPacketHandler.ReadPacket(this, NetworkStream);
 
-            connectionTask = Task.Run(ReadThread);
+                connectionTask = Task.Run(ReadThread);
+
+                return true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Error logging in to server {ip}:{port}: " + e.ToString());
+                return false;
+            }
+        }
+
+        public bool ConnectClassicube(string hash, string mppass="")
+        {
+            var serverlist = ClassicubeAPI.GetServerInfo(hash);
+            if (serverlist.Count == 0)
+            {
+                Console.WriteLine($"Couldn't find server with hash {hash}");
+                return false;
+            }
+            var server = serverlist[0];
+
+            Console.WriteLine(server.name);
+            Console.WriteLine(server.ip);
+
+            Verification = mppass == "" ?  server.mp_pass : mppass;
+
+            Console.WriteLine($"Verification pass is now {Verification}");
+
+            return Connect(server.ip, server.port, Verification);
         }
 
         public void Disconnect()
@@ -65,14 +105,16 @@ namespace ClassicConnect
         public void SendBytes(byte[] bytes)
         {
             if (!Client.Connected) return;
-            // Console.WriteLine("Sending bytes " + string.Join(", ", bytes));
+            //Console.WriteLine("Sending bytes " + string.Join(", ", bytes));
             NetworkStream.Write(bytes);
-            // NetworkStream.Flush();
+            NetworkStream.Flush();
         }
 
         public void SendMessage(string message)
         {
+            //Console.WriteLine("Sending message " + message);
             SendBytes(Network.Player.Message.GetBytes(message));
+            //Console.WriteLine("Sent?");
         }
 
         public void PlaceBlock(short x, short y, short z, byte block)

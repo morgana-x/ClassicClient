@@ -12,13 +12,15 @@ namespace ClassicConnect.Network.CPE
 
         public override void Read(ClassicClient connection, Stream stream)
         {
-            int VelX = Util.ReadInt(stream);
-            int VelY = Util.ReadInt(stream);
-            int VelZ = Util.ReadInt(stream);
+            byte[] buffer = Util.ReadBytes(stream, 15);
 
-            byte modeX = (byte)stream.ReadByte();
-            byte modeY = (byte)stream.ReadByte();
-            byte modeZ = (byte)stream.ReadByte();
+            int VelX = Util.ReadInt(buffer,0);
+            int VelY = Util.ReadInt(buffer,4);
+            int VelZ = Util.ReadInt(buffer,8);
+
+            byte modeX = buffer[12];
+            byte modeY = buffer[13];
+            byte modeZ = buffer[14];
         }
     }
 }
