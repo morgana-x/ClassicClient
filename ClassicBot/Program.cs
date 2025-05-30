@@ -53,7 +53,7 @@ public partial class Program
         client.Events.CoreEvents.DisconnectEvent += OnKick;
         client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
-        bool result = client.Connect("localhost", 25565);// "51.195.219.231", 25565, "ed9bb1717a0caae1904bfde4c53638e6");
+        bool result = client.Connect("127.0.0.1", 25565);
 
         if (!result)
         {
