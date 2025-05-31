@@ -17,14 +17,18 @@ namespace ClassicConnect.Command.Commands.Fun
             client.LocalPlayer.Y = (short)(y << 5);
             client.LocalPlayer.Z = (short)(z << 5);
 
+            bool modified = false;
             for (int bx = -r/2; bx <= r/2; bx++)
                 for (int by = -r/2; by <= r/2; by++)
                     for (int bz = -r/2; bz <= r/2; bz++)
                     {
-                        if (Math.Abs(bx) + Math.Abs(by) + Math.Abs(bz) >= r) continue;
+                        if (Math.Abs(bx) + Math.Abs(by) + Math.Abs(bz) >= r-1) continue;
+                        if (client.Level.GetBlock((short)(x+bx), (short)(y+by), (short)(z+bz)) ==b) continue;
+                        modified = true;
                         client.ModifyBlock((short)(x + bx), (short)(y + by), (short)(z + bz), b);
-                        Thread.Sleep(30);
+                        Thread.Sleep(20);
                     }
+            if (modified) Thread.Sleep(10);
         }
         private async void PlaceOrb(ClassicClient client, short x, short y, short z)
         {
@@ -33,35 +37,47 @@ namespace ClassicConnect.Command.Commands.Fun
         private async void BreakOrb(ClassicClient client, short x, short y, short z)
         {
 
-            PlaceSphere(client, x, y, z, 0,4);
+            PlaceSphere(client, x, y, z, 0,8);
         }
-
-        private async Task DoHollowPurple(ClassicClient client, short x, short y, short z, byte yaw, byte pitch)
+        private async Task rant(ClassicClient client)
         {
+            client.SendMessage("Sorry, Amanai.");
+            Thread.Sleep(1000);
+            client.SendMessage("I'm not even angry over you right now.");
+            Thread.Sleep(1000);
+            client.SendMessage("I bear no grudge against anyone.");
+            Thread.Sleep(1000);
+            client.SendMessage("It's just that the world feels so, so wonderful right now.");
+            Thread.Sleep(1000);
+            client.SendMessage("Throughout Heaven and Earth, I alone am the honored one.");
+
+        }
+        private async Task DoHollowPurple(ClassicClient client, short x, short y, short z, byte yaw, byte pitch, bool rant)
+        {
+            if (rant)
+                await this.rant(client);
             short[] orbpos = new short[] { x, y, z };
             short[] oldorbpos = new short[] { x, y, z };
-            float[] dir = new float[] { 1f, 0f, 0f };// Util.DirVec(pitch, yaw);
+            float[] dir = new float[] { 2f, 0f, 0f };// Util.DirVec(pitch, yaw);
             int d = 0;
-            while (!client.Level.Loading && client.Level.ValidPos(orbpos) && d < 6)
+            while (!client.Level.Loading && client.Level.ValidPos(orbpos) && d < 12)
             {
                 d++;
               
                 BreakOrb(client, oldorbpos[0], oldorbpos[1], oldorbpos[2]);
-                Thread.Sleep(200);
                 PlaceOrb(client, orbpos[0], orbpos[1], orbpos[2]);
                 for (int i = 0; i < 3; i++)
                 {
                     oldorbpos[i] = orbpos[i];
-                    orbpos[i] += (short)dir[0];
+                    orbpos[i] += (short)dir[i];
                 }
-                Thread.Sleep(200);
             }
             BreakOrb(client, orbpos[0], orbpos[1], orbpos[2]);
             BreakOrb(client, oldorbpos[0], oldorbpos[1], oldorbpos[2]);
         }
         public override bool OnExecute(ClassicClient client, ClassicPlayer executor, string[] arguments)
         {
-            Task.Run(() => DoHollowPurple(client, executor.BlockX, executor.BlockY, executor.BlockZ, executor.Yaw, executor.Pitch));
+            Task.Run(() => DoHollowPurple(client, executor.BlockX, executor.BlockY, executor.BlockZ, executor.Yaw, executor.Pitch, arguments.Length>0));
             return true;
         }
     }

@@ -7,6 +7,8 @@ namespace ClassicConnect
         public static bool CPE = false;
         public static bool FullCP437 = false;
 
+        public static System.Random Random = new System.Random();
+
         // https://github.com/ClassiCube/MCGalaxy/blob/master/MCGalaxy/Chat/EmotesHandler.cs#L46
        
         /// <summary> Conversion for code page 437 characters from index 0 to 31 to unicode. </summary>

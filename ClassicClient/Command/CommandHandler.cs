@@ -15,6 +15,7 @@ namespace ClassicConnect.Command
             RegisterCommand(new Commands.Movement.Summon());
             RegisterCommand(new Commands.Admin.SetRank());
             RegisterCommand(new Commands.Fun.HollowPurple());
+            RegisterCommand(new Commands.Building.OneBlockTower());
             client.Events.PlayerEvents.ChatEvent += this.OnMessage;
 
         }
