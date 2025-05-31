@@ -47,6 +47,8 @@ namespace ClassicConnect
             uncompressed.Read(Data);
 
             Loading = false;
+
+            Console.WriteLine($"Loaded level of size {width} {height} {length}");
         }
 
         public short GetBlock(short x, short y, short z)
@@ -60,6 +62,16 @@ namespace ClassicConnect
         public void SetBlock(int indice, byte block)
         {
             Data[indice] = block;
+        }
+        public bool ValidPos(short x, short y, short z)
+        {
+            if (x < 0 || y < 0 || z < 0) return false;
+            if (x >= Width || y >= Height || z >= Length) return false;
+            return true;
+        }
+        public bool ValidPos(short[] pos)
+        {
+            return ValidPos(pos[0], pos[1], pos[2]);
         }
         public void SetBlock(short x, short y, short z, byte block)
         {

@@ -18,6 +18,24 @@ namespace ClassicConnect.Player
 
             return PlayerList[id];
         }
+
+        public ClassicPlayer? GetPlayer(string name)
+        {
+            foreach (var pl in PlayerList)
+                if (pl.Value.Name == name) return pl.Value;
+            return null;
+        }
+
+        public ClassicPlayer? SearchPlayer(string name)
+        {
+            foreach (var pl in PlayerList)
+            {
+                if (pl.Value.Name.ToLower() == name.ToLower()) return pl.Value;
+                if (pl.Value.Name.ToLower().StartsWith(name.ToLower())) return pl.Value;
+            }
+            return null;
+        }
+
         public void OnStartLoadLevel()
         {
             if (PlayerList.Count > 1)
@@ -29,12 +47,23 @@ namespace ClassicConnect.Player
         {
             if (id == -1)
             {
-                LocalPlayer.SetPositionRotation(x, y, z, yaw, pitch);
-                Client.Events.PlayerEvents.OnPlayerSpawn(new(id, LocalPlayer));
+                Client.LocalPlayer.SetPositionRotation(x, y, z, yaw, pitch);
+                Client.Events.PlayerEvents.OnPlayerSpawn(new(id, Client.LocalPlayer));
+
+                if (CPE.EnabledCPE["NotifyAction"])
+                    Client.SendBytes(ClassicConnect.Network.CPE.NotifyPositionAction.GetBytes(3, Client.LocalPlayer));
+
+                if (!PlayerList.ContainsKey(id))
+                {
+                    PlayerList.Add(id, Client.LocalPlayer);
+                    return;
+                }
+
+                PlayerList[id] = Client.LocalPlayer;
                 return;
             }
-            ClassicPlayer player = new ClassicPlayer(id, name, x, y, z, yaw, pitch);
 
+            ClassicPlayer player = new ClassicPlayer(id, name, x, y, z, yaw, pitch);
             Client.Events.PlayerEvents.OnPlayerSpawn(new(id, player));
 
             if (!PlayerList.ContainsKey(id))
@@ -58,11 +87,6 @@ namespace ClassicConnect.Player
 
         internal void SetPosRot(sbyte id, short x, short y, short z, byte yaw, byte pitch)
         {
-            if (id == -1)
-            {
-                LocalPlayer.SetPositionRotation(x, y, z, yaw, pitch);
-                return;
-            }
             var player = GetPlayer(id);
             if (player == null) return;
             player.SetPositionRotation(x, y, z, yaw, pitch);

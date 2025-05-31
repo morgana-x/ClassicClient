@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using ClassicConnect.Command;
 using ClassicConnect.Event;
 using ClassicConnect.Network;
 using ClassicConnect.Player;
@@ -15,7 +16,7 @@ namespace ClassicConnect
         public ClassicPlayer LocalPlayer;
         public ClassicPlayerList PlayerList;
         public ClassicLevel Level = new ClassicLevel();
-
+        public CommandHandler CommandHandler;
         public EventManager Events = new EventManager();
 
         public TcpClient Client;
@@ -29,6 +30,8 @@ namespace ClassicConnect
             ClassicPacketHandler.RegisterPackets();
             LocalPlayer = new ClassicPlayer(-1, name, 0, 0, 0, 0, 0);
             PlayerList = new ClassicPlayerList(this,LocalPlayer);
+            CommandHandler = new CommandHandler(this);
+            Rank.Load(Path.Join(AppContext.BaseDirectory, "ranks.data"));
         }
 
         public ClassicClient(string name, string password)
@@ -105,7 +108,7 @@ namespace ClassicConnect
         public void SendBytes(byte[] bytes)
         {
             if (!Client.Connected) return;
-            //Console.WriteLine("Sending bytes " + string.Join(", ", bytes));
+           // Console.WriteLine("Sending bytes " + string.Join(", ", bytes));
             NetworkStream.Write(bytes);
             NetworkStream.Flush();
         }
@@ -119,13 +122,25 @@ namespace ClassicConnect
 
         public void PlaceBlock(short x, short y, short z, byte block)
         {
+            if (!Level.ValidPos(x, y, z)) return;
             Level.SetBlock(x, y, z, block);
             SendBytes(Network.Level.SetBlock.GetBytes(x, y, z, block, false));
         }
         public void BreakBlock(short x, short y, short z, byte block)
         {
+            if (!Level.ValidPos(x, y, z)) return;
+            if (Level.GetBlock(x, y, z) == 0) return;
             Level.SetBlock(x, y, z, 0);
             SendBytes(Network.Level.SetBlock.GetBytes(x, y, z, block, true));
+        }
+
+        public void ModifyBlock(short x, short y, short z, byte block)
+        {
+            if (!Level.ValidPos(x, y, z)) return;
+            if (Level.GetBlock(x, y, z) == block) return;
+            BreakBlock(x, y, z, block);
+            if (block == 0) return;
+            PlaceBlock(x, y, z, block);
         }
 
         DateTime nextSendPosition = DateTime.Now;
@@ -140,13 +155,14 @@ namespace ClassicConnect
                     break;
                 }
 
-                if (DateTime.Now > nextSendPosition)
+                if (DateTime.Now > nextSendPosition && !Level.Loading)
                 {
                     nextSendPosition = DateTime.Now.AddMilliseconds(50);
-                    SendBytes(Network.Player.Teleport.GetBytes(LocalPlayer.X, LocalPlayer.Y, LocalPlayer.Z, LocalPlayer.Yaw, LocalPlayer.Pitch));
+                    SendBytes(Network.Player.Teleport.GetBytes(LocalPlayer));
                 }
             }
             Console.WriteLine("Connection closed");
         }
+
     }
 }

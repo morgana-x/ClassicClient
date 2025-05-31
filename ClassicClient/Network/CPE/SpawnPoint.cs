@@ -20,6 +20,10 @@ namespace ClassicConnect.Network.CPE
 
             byte yaw = data[6];
             byte pitch = data[7];
+
+
+            if (ClassicConnect.CPE.EnabledCPE["NotifyAction"])
+                connection.SendBytes(ClassicConnect.Network.CPE.NotifyPositionAction.GetBytes(4, spawn[0], spawn[1], spawn[2]));
         }
     }
 }

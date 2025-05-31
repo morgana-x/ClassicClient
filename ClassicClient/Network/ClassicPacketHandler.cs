@@ -70,6 +70,7 @@
             RegisterPacket(new CPE.CustomBlocks());
             RegisterPacket(new CPE.EnvProperty());
             RegisterPacket(new CPE.VelocityControlPacket());
+            RegisterPacket(new CPE.SetTextHotkey());
         }
     }
 }

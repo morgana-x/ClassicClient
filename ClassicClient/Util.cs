@@ -133,5 +133,10 @@ namespace ClassicConnect
             for (int i=0; i<insert.Length && i+index < target.Length; i++)
                 target[i+index] = insert[i];
         }
+
+        public static float[] DirVec(byte pitch, byte yaw)
+        {
+            return new float[3] { 0, 0, 0 };
+        }
     }
 }

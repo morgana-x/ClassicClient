@@ -1,4 +1,6 @@
-﻿namespace ClassicConnect.Network.Player
+﻿using ClassicConnect.Player;
+
+namespace ClassicConnect.Network.Player
 {
     internal class Teleport : ClassicPacket
     {
@@ -30,6 +32,10 @@
             bytes[9] = pitch;
 
             return bytes;
+        }
+        public static byte[] GetBytes(ClassicPlayer pl)
+        {
+            return GetBytes(pl.X, pl.Y, pl.Z, pl.Yaw, pl.Pitch);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace ClassicConnect
             //["ExtEntityPositions"] = false,
             ["TwoWayPing"] = false,
             //["InventoryOrder"] = false,
-            ["InstantMOTD"] = false,
+           // ["InstantMOTD"] = false,
             //["FastMap"] = false,
             //["ExtendedTextures"] = false,
             //["SetHotbar"] = false,
@@ -68,7 +68,7 @@ namespace ClassicConnect
             //["ExtEntityTeleport"] = false,
             ["LightingMode"] = false,
             //["CinematicGui"] = false,
-            //["NotifyAction"] = false,
+            ["NotifyAction"] = false,
 
         };
     }
