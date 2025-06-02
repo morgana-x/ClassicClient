@@ -14,8 +14,11 @@ namespace ClassicConnect.Command
 
             RegisterCommand(new Commands.Movement.Summon());
             RegisterCommand(new Commands.Admin.SetRank());
+            RegisterCommand(new Commands.Admin.CancelTasks());
             RegisterCommand(new Commands.Fun.HollowPurple());
             RegisterCommand(new Commands.Building.OneBlockTower());
+            RegisterCommand(new Commands.Building.ImagePlacer());
+
             client.Events.PlayerEvents.ChatEvent += this.OnMessage;
 
         }
@@ -46,7 +49,7 @@ namespace ClassicConnect.Command
                 message = message.Substring(2);
             if (playername.StartsWith("&"))
                 playername = playername.Substring(2);
-        
+
             ClassicPlayer? player = Client.PlayerList.GetPlayer(playername);
             if (player == null) { player = Client.PlayerList.GetPlayer(ev.PlayerId); }
             if (player == null) return;

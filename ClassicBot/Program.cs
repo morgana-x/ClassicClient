@@ -41,7 +41,7 @@ public partial class Program
     }
     public static void Main(string[] args)
     {
-        string name = "morgana";
+        string name = "morgana2";
         string password = "";
         ClassicClient client = new ClassicClient(name);//, password);
         client.Events.PlayerEvents.ChatEvent += OnMessage;
@@ -53,7 +53,7 @@ public partial class Program
         client.Events.CoreEvents.DisconnectEvent += OnKick;
         client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
-        bool result = client.Connect("127.0.0.1", 25565);
+        bool result = client.Connect("131.161.69.89",25566);
 
         if (!result)
         {

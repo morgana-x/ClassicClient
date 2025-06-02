@@ -15,6 +15,7 @@
             }
            // Console.WriteLine("Reading packet 0x" + id.ToString("X"));
             ReadPackets[id].Read(client, stream);
+            stream.Flush();
             return id;
         }
 

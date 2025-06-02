@@ -26,7 +26,7 @@ namespace ClassicConnect.Command.Commands.Fun
                         if (client.Level.GetBlock((short)(x+bx), (short)(y+by), (short)(z+bz)) ==b) continue;
                         modified = true;
                         client.ModifyBlock((short)(x + bx), (short)(y + by), (short)(z + bz), b);
-                        Thread.Sleep(20);
+                        Thread.Sleep(5);
                     }
             if (modified) Thread.Sleep(10);
         }
@@ -77,7 +77,8 @@ namespace ClassicConnect.Command.Commands.Fun
         }
         public override bool OnExecute(ClassicClient client, ClassicPlayer executor, string[] arguments)
         {
-            Task.Run(() => DoHollowPurple(client, executor.BlockX, executor.BlockY, executor.BlockZ, executor.Yaw, executor.Pitch, arguments.Length>0));
+            Task.Run(() => DoHollowPurple(client, executor.BlockX, executor.BlockY, executor.BlockZ, executor.Yaw, executor.Pitch, arguments.Length>0),
+                 client.cancelToken.Token);
             return true;
         }
     }

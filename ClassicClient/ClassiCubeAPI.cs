@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Web;
 namespace ClassicConnect
@@ -30,7 +31,7 @@ namespace ClassicConnect
             public List<ClassicubeServer> servers { get; set; }
         }
 
-        public class CLassicubeLoginDetails
+        public class ClassicubeLoginDetails
         {
             public bool authenticated { get; set; }
 
@@ -46,7 +47,7 @@ namespace ClassicConnect
             CookieContainer = cookieContainer, UseCookies=true, AllowAutoRedirect=true };
         private static HttpClient classicubeHTTPClient = new(classicubeHTTPhandler)
         {
-            BaseAddress = new Uri("https://classicube.net"),
+            BaseAddress = new Uri("https://classicube.net")
         };
 
         public static async Task<List<ClassicubeServer>> GetServerListAsync()
@@ -76,25 +77,30 @@ namespace ClassicConnect
             return Task.Run(() => LoginAsync(username, password)).Result;
         }
 
-        public static CLassicubeLoginDetails LoginDetails =  new CLassicubeLoginDetails() { username = "unknown", authenticated = false, token = "", errors = ["connection"] };
+        public static ClassicubeLoginDetails LoginDetails =  new ClassicubeLoginDetails() { username = "unknown", authenticated = false, token = "", errors = ["connection"] };
        
         public static async Task<bool> LoginPost(string username, string password, string token, string logincode="")
         {
             var values = new Dictionary<string, string>
             {
-                { "username", username },
-                { "password", password },
-                { "token"   , token},
-                { "login_code", logincode }
+                { "username"    , username },
+                { "password"    , password },
+                { "token"       , token},
+                { "login_code"  , logincode }
             };
-
-            var content = new FormUrlEncodedContent(values);
-            Console.WriteLine(await content.ReadAsStringAsync());
-
-            var response = await classicubeHTTPClient.PostAsync($"/api/login/", content);
+            var message = new HttpRequestMessage(HttpMethod.Post, "/api/login/");
+            var session = cookieContainer.GetAllCookies()[0].Value;
+            var remember_token = cookieContainer.GetAllCookies().Count > 1 ? cookieContainer.GetAllCookies()[1].Value : "";
+            message.Headers.Add("Cookie", $"session={session};remember_token={remember_token}");
+            message.Headers.Add("Connection", "keep-alive");
+            message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36");
+            message.Content = new FormUrlEncodedContent(values);
+            Console.WriteLine(await message.Content.ReadAsStringAsync());
+            Console.WriteLine($"{cookieContainer.GetAllCookies()[0].Name}={cookieContainer.GetAllCookies()[0].Value}");
+            var response = await classicubeHTTPClient.SendAsync(message);
 
             Console.WriteLine(response.StatusCode);
-            var loginDetails = await response.Content.ReadFromJsonAsync<CLassicubeLoginDetails>();
+            var loginDetails = await response.Content.ReadFromJsonAsync<ClassicubeLoginDetails>();
             Console.WriteLine(await response.Content.ReadAsStringAsync());
 
             if (loginDetails.errors.Count > 0)
@@ -119,9 +125,10 @@ namespace ClassicConnect
         }
         public static async Task<bool> LoginAsync(string username, string password, string login_code="")
         {
-            Console.WriteLine($"Logging in as {username}...");
 
-            var result = (await classicubeHTTPClient.GetFromJsonAsync<CLassicubeLoginDetails>($"/api/login/"));
+            classicubeHTTPClient.DefaultRequestHeaders.TryAddWithoutValidation("Connection", "keep-alive");
+            Console.WriteLine($"Logging in as {username}...");
+            var result = (await classicubeHTTPClient.GetFromJsonAsync<ClassicubeLoginDetails>("/api/login/"));
             
             if (result == null)
             {

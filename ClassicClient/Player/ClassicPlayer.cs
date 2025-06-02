@@ -20,6 +20,8 @@
 
         public bool LocalPlayer => ID == -1;
 
+        public ClassicClient client;
+
         public int Rank { get { return LocalPlayer ? int.MaxValue : Command.Rank.GetRank(Name); } set { if (!LocalPlayer) { Command.Rank.SetRank(Name, value); } } }
 
         public string Color = "";
@@ -32,6 +34,16 @@
         public void SetPosition(short x, short y, short z)
         {
             X = x; Y = y; Z = z;
+        }
+
+        public void SetBlockPosition(short x, short y, short z)
+        {
+            SetPosition((short)(x << 5), (short)(y << 5), (short)(z << 5));
+        }
+
+        public int BlockDistance(short x, short y, short z)
+        {
+            return (Math.Abs(x - BlockX) + Math.Abs(y - BlockY) + Math.Abs(z - BlockZ));
         }
 
         public void SetRotation(byte yaw, byte pitch)
@@ -47,8 +59,9 @@
             Z += z;
         }
 
-        public ClassicPlayer(sbyte id, string name, short x, short y, short z, byte yaw, byte pitch)
+        public ClassicPlayer(ClassicClient client, sbyte id, string name, short x, short y, short z, byte yaw, byte pitch)
         {
+            this.client = client;
             ID = id;
             if (name.StartsWith("&") && name.Length >= 3)
             {

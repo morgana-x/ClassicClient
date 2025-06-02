@@ -23,12 +23,14 @@ namespace ClassicConnect
         internal NetworkStream NetworkStream;
 
         private Task connectionTask;
+        private Task writeConnectionTask;
 
+        public CancellationTokenSource cancelToken = new CancellationTokenSource();
         public ClassicClient(string name)
         {
             Name = name;
             ClassicPacketHandler.RegisterPackets();
-            LocalPlayer = new ClassicPlayer(-1, name, 0, 0, 0, 0, 0);
+            LocalPlayer = new ClassicPlayer(this, -1, name, 0, 0, 0, 0, 0);
             PlayerList = new ClassicPlayerList(this,LocalPlayer);
             CommandHandler = new CommandHandler(this);
             Rank.Load(Path.Join(AppContext.BaseDirectory, "ranks.data"));
@@ -39,14 +41,14 @@ namespace ClassicConnect
             Name = name;
             ClassicubeAPI.Login(name, password);
             ClassicPacketHandler.RegisterPackets();
-            LocalPlayer = new ClassicPlayer(-1, name, 0, 0, 0, 0, 0);
+            LocalPlayer = new ClassicPlayer(this, -1, name, 0, 0, 0, 0, 0);
             PlayerList = new ClassicPlayerList(this, LocalPlayer);
 
         }
 
         public bool Connect(string ip, string mppass="")
         {
-            int port = 25566;
+            int port = 25565;
             if (ip.Contains(":"))
             {
                 string[] split = ip.Split(":");
@@ -68,6 +70,7 @@ namespace ClassicConnect
                 ClassicPacketHandler.ReadPacket(this, NetworkStream);
 
                 connectionTask = Task.Run(ReadThread);
+                writeConnectionTask = Task.Run(WriteThread);
 
                 return true;
             }
@@ -154,14 +157,24 @@ namespace ClassicConnect
                     Disconnect();
                     break;
                 }
-
+            }
+            Console.WriteLine("Connection closed");
+        }
+        public async Task WriteThread()
+        {
+            while (Client.Connected)
+            {
                 if (DateTime.Now > nextSendPosition && !Level.Loading)
                 {
-                    nextSendPosition = DateTime.Now.AddMilliseconds(50);
+                    nextSendPosition = DateTime.Now.AddMilliseconds(20);
                     SendBytes(Network.Player.Teleport.GetBytes(LocalPlayer));
                 }
             }
-            Console.WriteLine("Connection closed");
+        }
+
+        public void CancelTasks()
+        {
+            cancelToken.Cancel();
         }
 
     }

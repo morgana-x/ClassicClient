@@ -89,7 +89,14 @@ namespace ClassicConnect
         public static byte[] ReadBytes(Stream stream, int amount, bool bigendian=false)
         {
             byte[] buffer = new byte[amount];
-            stream.Read(buffer);
+            int bytesRead = 0;
+
+            while (bytesRead < buffer.Length)
+            {
+                var read = stream.Read(buffer, bytesRead, buffer.Length-bytesRead);
+                bytesRead += read;
+            }
+          
 
             if (bigendian)
                 Array.Reverse(buffer);

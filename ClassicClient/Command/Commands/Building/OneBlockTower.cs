@@ -27,7 +27,7 @@ namespace ClassicConnect.Command.Commands.Building
                 client.LocalPlayer.SetPosition((short)(x << 5), (short)(y << 5), (short)(z << 5));
                 client.PlaceBlock(client.LocalPlayer.BlockX, client.LocalPlayer.BlockY, client.LocalPlayer.BlockZ, randomblock());
                 y++;
-                Thread.Sleep(50);
+                Thread.Sleep(20);
             }
 
         }
@@ -41,7 +41,8 @@ namespace ClassicConnect.Command.Commands.Building
             if (height < 0)
                 height = 20;
 
-            Task.Run(() => OneBlockBuild(client, executor.BlockX, executor.BlockY, executor.BlockZ, height));
+            Task.Run(() => OneBlockBuild(client, executor.BlockX, executor.BlockY, executor.BlockZ, height)
+                , client.cancelToken.Token);
             return true;
         }
     }

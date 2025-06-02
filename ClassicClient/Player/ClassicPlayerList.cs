@@ -31,6 +31,8 @@ namespace ClassicConnect.Player
             foreach (var pl in PlayerList)
             {
                 if (pl.Value.Name.ToLower() == name.ToLower()) return pl.Value;
+            }
+            foreach(var pl in PlayerList) {
                 if (pl.Value.Name.ToLower().StartsWith(name.ToLower())) return pl.Value;
             }
             return null;
@@ -63,7 +65,7 @@ namespace ClassicConnect.Player
                 return;
             }
 
-            ClassicPlayer player = new ClassicPlayer(id, name, x, y, z, yaw, pitch);
+            ClassicPlayer player = new ClassicPlayer(Client, id, name, x, y, z, yaw, pitch);
             Client.Events.PlayerEvents.OnPlayerSpawn(new(id, player));
 
             if (!PlayerList.ContainsKey(id))
@@ -82,7 +84,7 @@ namespace ClassicConnect.Player
             if (PlayerList.ContainsKey(id))
                 PlayerList.Remove(id);
 
-            Client.Events.PlayerEvents.OnPlayerDepawn(new(id, player != null ? player : new ClassicPlayer(id, "Unknown", 0, 0, 0, 0, 0)));
+            Client.Events.PlayerEvents.OnPlayerDepawn(new(id, player != null ? player : new ClassicPlayer(Client, id, "Unknown", 0, 0, 0, 0, 0)));
         }
 
         internal void SetPosRot(sbyte id, short x, short y, short z, byte yaw, byte pitch)
