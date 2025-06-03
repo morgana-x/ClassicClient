@@ -182,5 +182,10 @@ namespace ClassicConnect
             else if (pitch >= (64 - quadrant) && pitch <= 64)
                 dirY = -1;
         }
+
+        public static short Lerp(short s, short f, float b)
+        {
+            return (short)((float)s + ((float)(s - f) / (float)b));
+        }
     }
 }

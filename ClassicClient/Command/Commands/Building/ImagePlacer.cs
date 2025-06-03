@@ -82,12 +82,17 @@ namespace ClassicConnect.Command.Commands.Building
                     byte block = ImageConverter.GetNearestBlock(bytearray);
 
                     if (client.Level.GetBlock(bx, y, bz) == block) continue;
-
-                    /* if (client.LocalPlayer.BlockDistance(bx, y, bz) > 2)*/
+                    if (client.LocalPlayer.BlockDistance(bx, by, bz) > 20)
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            client.LocalPlayer.SetBlockPosition(Util.Lerp(client.LocalPlayer.X, bx, 0.25f), Util.Lerp(client.LocalPlayer.Y, by, 0.25f), Util.Lerp(client.LocalPlayer.Z, bz, 0.25f));
+                        }
+                    }
                     client.LocalPlayer.SetBlockPosition(bx, (short)(by + 1), bz);
                     client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
                     client.PlaceBlock(bx, by, bz, block);
-                    Thread.Sleep(25);
+                    Thread.Sleep(50);
                 }
             }
         }

@@ -65,7 +65,7 @@ public partial class Program
         client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
 
-        bool result = client.Connect("localhost", 25565); //client.Connect("131.161.69.89", 25566); //client.ConnectClassicube("151ca55cfaa809c67678970903253280"); //client.Connect("131.161.69.89",25566);
+        bool result = client.ConnectClassicube("5bd63bee8f109bbf619234e5d533b445"); //client.Connect("131.161.69.89",25566);
 
         if (!result)
         {
