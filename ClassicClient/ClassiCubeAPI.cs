@@ -16,7 +16,7 @@ namespace ClassicConnect
             public string hash { get; set; }
             public string ip { get; set; }
             public int maxplayers { get; set; }
-            public string mp_pass { get; set; }
+            public string mppass { get; set; }
             public string name { get; set; }
             public int players { get; set; }
             public int port { get; set; }
@@ -72,14 +72,14 @@ namespace ClassicConnect
             return Task.Run(() => GetServerInfoAsync(hash)).Result;
         }
 
-        public static bool Login(string username, string password)
+        public static bool Login(string username, string password, string remember_token = "")
         {
-            return Task.Run(() => LoginAsync(username, password)).Result;
+            return Task.Run(() => LoginAsync(username, password, remember_token: remember_token)).Result;
         }
 
         public static ClassicubeLoginDetails LoginDetails =  new ClassicubeLoginDetails() { username = "unknown", authenticated = false, token = "", errors = ["connection"] };
        
-        public static async Task<bool> LoginPost(string username, string password, string token, string logincode="")
+        public static async Task<bool> LoginPost(string username, string password, string token, string logincode="", string remember_token="")
         {
             var values = new Dictionary<string, string>
             {
@@ -88,9 +88,10 @@ namespace ClassicConnect
                 { "token"       , token},
                 { "login_code"  , logincode }
             };
+
             var message = new HttpRequestMessage(HttpMethod.Post, "/api/login/");
             var session = cookieContainer.GetAllCookies()[0].Value;
-            var remember_token = cookieContainer.GetAllCookies().Count > 1 ? cookieContainer.GetAllCookies()[1].Value : "";
+            remember_token = remember_token == "" ? cookieContainer.GetAllCookies().Count > 1 ? cookieContainer.GetAllCookies()[1].Value : "" : remember_token;
             message.Headers.Add("Cookie", $"session={session};remember_token={remember_token}");
             message.Headers.Add("Connection", "keep-alive");
             message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36");
@@ -123,7 +124,7 @@ namespace ClassicConnect
             LoginDetails = loginDetails;
             return true;
         }
-        public static async Task<bool> LoginAsync(string username, string password, string login_code="")
+        public static async Task<bool> LoginAsync(string username, string password, string login_code="", string remember_token="")
         {
 
             classicubeHTTPClient.DefaultRequestHeaders.TryAddWithoutValidation("Connection", "keep-alive");
@@ -145,7 +146,7 @@ namespace ClassicConnect
             Console.WriteLine(string.Join(", ", result.errors));
 
             Console.WriteLine($"Token {result.token}");
-            return await LoginPost(username, password, result.token, login_code);
+            return await LoginPost(username, password, result.token, login_code, remember_token);
         }
 
     }

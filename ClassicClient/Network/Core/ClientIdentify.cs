@@ -10,7 +10,7 @@
             bytes[1] = 0x07;
 
             Util.InsertBytes(ref bytes, 2, Util.EncodeString(Username));
-            Util.InsertBytes(ref bytes, 2 + 64, Util.EncodeString(VerificationKey));
+            Util.InsertBytes(ref bytes, 2 + 64, Util.EncodeString(VerificationKey != null ? VerificationKey : ""));
 
             bytes[2 + 64 + 64] = CPE ? (byte)0x42 : (byte)0x00;
 

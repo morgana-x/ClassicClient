@@ -41,8 +41,8 @@
        
         public void SetPositionRotation(short x, short y, short z, byte yaw, byte pitch)
         {
-            SetPosition(x, y, z);
             SetRotation(yaw, pitch);
+            SetPosition(x, y, z);
         }
         public void SetPosition(short x, short y, short z)
         {

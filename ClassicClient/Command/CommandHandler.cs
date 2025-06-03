@@ -12,7 +12,6 @@ namespace ClassicConnect.Command
         {
             this.Client = client;
 
-            RegisterCommand(new Commands.Movement.Summon());
             RegisterCommand(new Commands.Movement.Teleport());
             RegisterCommand(new Commands.Admin.SetRank());
             RegisterCommand(new Commands.Admin.CancelTasks());
@@ -31,6 +30,44 @@ namespace ClassicConnect.Command
                 Commands.Add(command.Name.ToLower(), command);
 
             Commands[command.Name.ToLower()] = command;
+        }
+
+        public bool HandleMessage(string playername, string message, sbyte playerid=-1)
+        {
+            ClassicPlayer? player = Client.PlayerList.GetPlayer(playername);
+            if (player == null && !(CPE.EnabledCPE.ContainsKey("MessageTypes") && CPE.EnabledCPE["MessageTypes"])) { player = Client.PlayerList.GetPlayer(playerid); }
+            if (player == null) return false;
+
+
+            List<string> split = message.Split(" ").ToList();
+            if (split.Count < 1) return false;
+
+            string command = split.First().ToLower();
+
+            if (command.StartsWith("&"))
+                command = command.Substring(2);
+
+
+            bool cmd = false;
+            foreach (var p in Prefix)
+            {
+                if (command.StartsWith(p))
+                {
+                    cmd = true;
+                    break;
+                }
+            }
+            if (!cmd) return false;
+            command = command.Substring(1);
+
+            if (!Commands.ContainsKey(command))
+            {
+                return false;
+            }
+
+            split.RemoveAt(0);
+            Commands[command].Execute(this.Client, player, split.ToArray());
+            return true;
         }
         public void OnMessage(object sender, ClassicConnect.Event.PlayerEvents.ChatEventArgs ev)
         {
@@ -51,40 +88,8 @@ namespace ClassicConnect.Command
             if (playername.StartsWith("&"))
                 playername = playername.Substring(2);
 
-            ClassicPlayer? player = Client.PlayerList.GetPlayer(playername);
-            if (player == null) { player = Client.PlayerList.GetPlayer(ev.PlayerId); }
-            if (player == null) return;
 
-
-            List<string> split = message.Split(" ").ToList();
-            if (split.Count < 1) return;
-
-            string command = split.First().ToLower();
-            
-            if (command.StartsWith("&"))
-                command = command.Substring(2);
-
-
-            bool cmd = false;
-            foreach(var p in Prefix)
-            {
-                if (command.StartsWith(p))
-                {
-                    cmd = true;
-                    break;
-                }
-            }
-            if (!cmd) return;
-            command = command.Substring(1);
-
-            if (!Commands.ContainsKey(command))
-            {
-                return;
-            }
-
-            split.RemoveAt(0);
-            Commands[command].Execute(this.Client, player, split.ToArray());
-
+            HandleMessage(playername, message, ev.PlayerId);
         }
     }
 }

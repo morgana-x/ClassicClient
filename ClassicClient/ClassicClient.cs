@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Xml.Linq;
 using ClassicConnect.Command;
 using ClassicConnect.Event;
 using ClassicConnect.Network;
@@ -26,26 +27,29 @@ namespace ClassicConnect
         private Task writeConnectionTask;
 
         public CancellationTokenSource cancelToken = new CancellationTokenSource();
+
+        public volatile bool Building = false;
         public ClassicClient(string name)
         {
             Name = name;
+            Setup();
+        }
+
+        public ClassicClient(string name, string password, string remember_token="")
+        {
+            Name = name;
+            ClassicubeAPI.Login(name, password, remember_token);
+            Setup();
+
+        }
+        private void Setup()
+        {
             ClassicPacketHandler.RegisterPackets();
-            LocalPlayer = new ClassicPlayer(this, -1, name, 0, 0, 0, 0, 0);
-            PlayerList = new ClassicPlayerList(this,LocalPlayer);
+            LocalPlayer = new ClassicPlayer(this, -1, Name, 0, 0, 0, 0, 0);
+            PlayerList = new ClassicPlayerList(this, LocalPlayer);
             CommandHandler = new CommandHandler(this);
             Rank.Load(Path.Join(AppContext.BaseDirectory, "ranks.data"));
         }
-
-        public ClassicClient(string name, string password)
-        {
-            Name = name;
-            ClassicubeAPI.Login(name, password);
-            ClassicPacketHandler.RegisterPackets();
-            LocalPlayer = new ClassicPlayer(this, -1, name, 0, 0, 0, 0, 0);
-            PlayerList = new ClassicPlayerList(this, LocalPlayer);
-
-        }
-
         public bool Connect(string ip, string mppass="")
         {
             int port = 25565;
@@ -93,8 +97,9 @@ namespace ClassicConnect
 
             Console.WriteLine(server.name);
             Console.WriteLine(server.ip);
+            Console.WriteLine(server.mppass);
 
-            Verification = mppass == "" ?  server.mp_pass : mppass;
+            Verification = server.mppass != null ?  server.mppass : mppass;
 
             Console.WriteLine($"Verification pass is now {Verification}");
 
@@ -119,6 +124,13 @@ namespace ClassicConnect
         public void SendMessage(string message)
         {
             //Console.WriteLine("Sending message " + message);
+            SendBytes(Network.Player.Message.GetBytes(message));
+            //Console.WriteLine("Sent?");
+        }
+
+        public void SendMessageProcessClientCommands(string message)
+        {
+            if (CommandHandler.HandleMessage(LocalPlayer.Name, message)) return;
             SendBytes(Network.Player.Message.GetBytes(message));
             //Console.WriteLine("Sent?");
         }

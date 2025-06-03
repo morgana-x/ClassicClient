@@ -156,6 +156,31 @@ namespace ClassicConnect
             float z = (float)(-Math.Cos(yaw) * Math.Cos(pitch));
             return new float[] { x, y, z };
         }
-    
+
+        //https://github.com/ClassiCube/MCGalaxy/blob/master/MCGalaxy/util/Math/DirUtils.cs
+        public static void FourYaw(byte yaw, out int dirX, out int dirZ)
+        {
+            dirX = 0; dirZ = 0;
+            const byte quadrant = 64 / 2;
+
+            if (yaw <= (0 + quadrant) || yaw >= (256 - quadrant))
+                dirZ = -1;
+            else if (yaw <= (128 - quadrant))
+                dirX = 1;
+            else if (yaw <= (128 + quadrant))
+                dirZ = 1;
+            else
+                dirX = -1;
+        }
+        public static void Pitch(byte pitch, out int dirY)
+        {
+            dirY = 0;
+            const byte quadrant = 32;
+
+            if (pitch >= 192 && pitch <= (192 + quadrant))
+                dirY = 1;
+            else if (pitch >= (64 - quadrant) && pitch <= 64)
+                dirY = -1;
+        }
     }
 }

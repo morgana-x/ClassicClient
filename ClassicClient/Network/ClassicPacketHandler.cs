@@ -13,8 +13,17 @@
                 Console.WriteLine($"Received unknown packet 0x{id.ToString("X")}!");
                 return -1;
             }
-           // Console.WriteLine("Reading packet 0x" + id.ToString("X"));
-            ReadPackets[id].Read(client, stream);
+            // Console.WriteLine("Reading packet 0x" + id.ToString("X"));
+            try
+            {
+                ReadPackets[id].Read(client, stream);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured reading packet {id}");
+                Console.WriteLine(ex.ToString());
+            }
+          //  Console.WriteLine("Read packet 0x" + id.ToString("X"));
             stream.Flush();
             return id;
         }

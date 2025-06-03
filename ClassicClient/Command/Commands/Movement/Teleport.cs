@@ -1,9 +1,4 @@
 ﻿using ClassicConnect.Player;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassicConnect.Command.Commands.Movement
 {
@@ -17,7 +12,8 @@ namespace ClassicConnect.Command.Commands.Movement
             if (arguments.Length == 0)
             {
                 client.LocalPlayer.SetPosition(executor.X, executor.Y, executor.Z);
-                client.SendMessage($"&eTeleported to &a{executor.Name}&e!");
+                client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
+                // client.SendMessage($"&eTeleported to &a{executor.Name}&e!");
                 return true;
             }
             if (arguments.Length < 3)
@@ -25,8 +21,9 @@ namespace ClassicConnect.Command.Commands.Movement
                 ClassicPlayer target = client.PlayerList.SearchPlayer(arguments[0]);
                 if (target == null) return false;
 
-                client.LocalPlayer.SetPosition(target.X, target.Y, target.Z);
-                client.SendMessage($"&eTeleported to &a{target.Name}&e!");
+                client.LocalPlayer.SetPositionRotation(target.X, target.Y, target.Z, target.Yaw, target.Pitch);
+                client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
+                // client.SendMessage($"&eTeleported to &a{target.Name}&e!");
                 return true;
             }
             short[] position = new short[3];
@@ -36,7 +33,8 @@ namespace ClassicConnect.Command.Commands.Movement
                     return false;
 
             client.LocalPlayer.SetBlockPosition(position[0], position[1], position[2]);
-            client.SendMessage($"&eTeleported to &a{position[0]} {position[1]} {position[2]}&e!");
+            client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
+            //  client.SendMessage($"&eTeleported to &a{position[0]} {position[1]} {position[2]}&e!");
             return true;
         }
     }

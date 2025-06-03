@@ -7,8 +7,9 @@ namespace ClassicConnect.Command.Commands.Admin
         public override int RankRequired => 100;
         public override bool OnExecute(ClassicClient client, ClassicPlayer executor, string[] arguments)
         {
-            client.CancelTasks();
-            client.SendMessage("Canceld tasks");
+            client.Building = false;
+           // client.CancelTasks();
+       //     client.SendMessage("Canceld tasks");
             return true;
         }
     }

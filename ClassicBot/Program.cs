@@ -43,7 +43,18 @@ public partial class Program
     {
         string name = "morgana2";
         string password = "";
-        ClassicClient client = new ClassicClient(name);//, password);
+        string remember_token = "";
+        string logindetailpath = Path.Join(Directory.GetCurrentDirectory(), "login.txt");
+        if (File.Exists(logindetailpath))
+        {
+            string[] lines = File.ReadAllLines(logindetailpath);
+            name = lines[0].Trim();
+            password = lines[1].Trim();
+            remember_token = lines[2].Trim();
+        }
+
+        ClassicClient client = password=="" ? new ClassicClient(name) : new ClassicClient(name, password, remember_token);
+
         client.Events.PlayerEvents.ChatEvent += OnMessage;
         client.Events.PlayerEvents.SpawnEvent += OnPlayerSpawn;
         client.Events.PlayerEvents.DepawnEvent += OnPlayerDespawn;
@@ -53,7 +64,8 @@ public partial class Program
         client.Events.CoreEvents.DisconnectEvent += OnKick;
         client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
-        bool result = client.Connect("131.161.69.89",25566);
+
+        bool result = client.Connect("localhost", 25565); //client.Connect("131.161.69.89", 25566); //client.ConnectClassicube("151ca55cfaa809c67678970903253280"); //client.Connect("131.161.69.89",25566);
 
         if (!result)
         {
@@ -63,7 +75,7 @@ public partial class Program
 
         while (client.Client.Connected)
         {
-            client.SendMessage(Console.ReadLine());
+            client.SendMessageProcessClientCommands(Console.ReadLine());
         }
 
     }

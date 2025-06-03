@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClassicConnect.Player;
+﻿using ClassicConnect.Player;
 
 namespace ClassicConnect.Command.Commands.Building
 {
@@ -27,12 +22,15 @@ namespace ClassicConnect.Command.Commands.Building
                 client.LocalPlayer.SetPosition((short)(x << 5), (short)(y << 5), (short)(z << 5));
                 client.PlaceBlock(client.LocalPlayer.BlockX, client.LocalPlayer.BlockY, client.LocalPlayer.BlockZ, randomblock());
                 y++;
-                Thread.Sleep(20);
+                Thread.Sleep(25);
             }
 
         }
         public override bool OnExecute(ClassicClient client, ClassicPlayer executor, string[] arguments)
         {
+            if (client.Building)
+                return false;
+
             short height = (short)(client.Level.Height - executor.BlockY);
 
             if (arguments.Length > 0)
@@ -41,7 +39,18 @@ namespace ClassicConnect.Command.Commands.Building
             if (height < 0)
                 height = 20;
 
-            Task.Run(() => OneBlockBuild(client, executor.BlockX, executor.BlockY, executor.BlockZ, height)
+            Task.Run(() => {
+                client.Building = true;
+                try
+                {
+                    OneBlockBuild(client, executor.BlockX, executor.BlockY, executor.BlockZ, height);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                client.Building = false;
+            }
                 , client.cancelToken.Token);
             return true;
         }

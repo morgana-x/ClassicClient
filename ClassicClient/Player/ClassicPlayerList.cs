@@ -52,7 +52,7 @@ namespace ClassicConnect.Player
                 Client.LocalPlayer.SetPositionRotation(x, y, z, yaw, pitch);
                 Client.Events.PlayerEvents.OnPlayerSpawn(new(id, Client.LocalPlayer));
 
-                if (CPE.EnabledCPE["NotifyAction"])
+                if (CPE.EnabledCPE.ContainsKey("NotifyAction") && CPE.EnabledCPE["NotifyAction"])
                     Client.SendBytes(ClassicConnect.Network.CPE.NotifyPositionAction.GetBytes(3, Client.LocalPlayer));
 
                 if (!PlayerList.ContainsKey(id))

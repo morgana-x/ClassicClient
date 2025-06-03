@@ -22,11 +22,11 @@ namespace ClassicConnect.Network.CPE
             ClassicConnect.CPE.SendCompatibleCPE(connection);
         }
 
-        public static byte[] GetBytes(short numberOfExtensions)
+        public static byte[] GetBytes(short numberOfExtensions, string clientName = "ClassiCube 1.3.7")
         {
             byte[] packet = new byte[67];
             packet[0] = 0x10;
-            Util.InsertBytes(ref packet, 1, Util.EncodeString("hello"));
+            Util.InsertBytes(ref packet, 1, Util.EncodeString(clientName));
             Util.InsertBytes(ref packet, 64, BitConverter.GetBytes(numberOfExtensions));
             return packet;
         }
