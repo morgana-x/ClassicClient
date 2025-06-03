@@ -13,7 +13,7 @@ namespace ClassicConnect.Command.Commands.Movement
             if (arguments.Length < 3)
             {
                 client.LocalPlayer.SetPosition(executor.X, executor.Y, executor.Z);
-                client.SendMessage($"%fTeleported to %a{executor.Name}!");
+                client.SendMessage($"&eTeleported to &a{executor.Name}&e!");
                 return true;
             }
             

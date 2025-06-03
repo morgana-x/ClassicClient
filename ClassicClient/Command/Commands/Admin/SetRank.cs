@@ -18,7 +18,7 @@ namespace ClassicConnect.Command.Commands.Admin
             if (!int.TryParse(arguments[1], out rank)) return false;
 
             target.Rank = rank;
-            client.SendMessage($"%fSet %a{target.Name}%f's rank to %a{rank}!");
+            client.SendMessage($"&fSet &a{target.Name}&f's rank to &a{rank}!");
             return true;
         }
     }

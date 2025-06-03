@@ -19,6 +19,8 @@ namespace ClassicConnect.Command.Commands.Building
             string fp = Path.Join(Path.Join(Directory.GetCurrentDirectory(), "image"), filepath);
             Console.WriteLine(fp);
             if (!File.Exists(fp)) return;
+
+            client.SendMessage($"&ePlacing &c{filepath}&e...");
             using var img = new ImageMagick.MagickImage(fp);
 
             var pixels= img.GetPixels();
@@ -42,12 +44,11 @@ namespace ClassicConnect.Command.Commands.Building
 
                     if (bx > client.Level.Width) break;
                     if (bz > client.Level.Length) break;
-
-                    if (client.LocalPlayer.BlockDistance(bx, y, bz) > 2)
-                        client.LocalPlayer.SetBlockPosition(bx, (short)(y+1), bz);
-
+                    if (client.Level.GetBlock(bx, y, bz) == block) continue;
+                    /* if (client.LocalPlayer.BlockDistance(bx, y, bz) > 2)*/
+                    client.LocalPlayer.SetBlockPosition(bx, (short)(y+1), bz);
                     client.PlaceBlock(bx, y, bz, block);
-                    Thread.Sleep(2);
+                    Thread.Sleep(1);
                 }
             }
         }
@@ -78,7 +79,12 @@ namespace ClassicConnect.Command.Commands.Building
                 [0x707070] = 1,
                 [0x7d8b91] = 1,
                 [0x828894] = 1,
+                [0x828995] = 1,
+                [0x917d75] = 1,
+                [0xa7afb9] = 1,
+                //  [0x3c3c3e] = 4,
                 [0x875704] = 3,
+                [0x996c55] = 3,
                 [0xbc9862] = 5,
                 [0xdad0a9] = 5,
                 [0xe3c2b7] = 12,
@@ -94,6 +100,11 @@ namespace ClassicConnect.Command.Commands.Building
                 [0xfbdaf2] = 12,
                 [0xebe3d1] = 12,
                 [0xfffc38] = 12,
+                [0xe2cfc1] = 12,
+                [0xf7e8d9] = 12,
+                [0xf0e8d7] = 12,
+                [0xf0e8de] = 12,
+               // [0xc7a28f] = 12,
                 //[0xebd4c6] = 12,
                 // [0xefd9c9] = 12,
                 [0xff0000] = 21,
@@ -148,6 +159,10 @@ namespace ClassicConnect.Command.Commands.Building
                 [0x234547] = 34,
                 [0x52342d] = 34,
                 [0x322e2e] = 34,
+                [0x413b3a] = 34,
+                [0x48494d] = 34,
+                [0x9c9fa1] = 35,
+                [0x3d414a] = 35,
                 [0xaea4b9] = 35,
                 [0x505050] = 35,
                 [0xbababa] = 35,
@@ -156,14 +171,24 @@ namespace ClassicConnect.Command.Commands.Building
                 [0xd8d1c0] = 35,
                 [0xcdd6e0] = 35,
                 [0xced8de] = 35,
+                [0xbfc9d1] = 35,
+                [0xbec8d0] = 35,
+               // [0x8b9ca2] = 35,
+                [0xc9d4da] = 35,
+                [0xc9cfd2] = 35,
+                [0x9fa9b1] = 35,
+                [0x898991] = 35,
                 [0xffffff] = 36,
                 [0xe6afe1] = 36,
                 [0xebe6ed] = 36,
                 [0xd8c5e1] = 36,
                 [0xe0cbe9] = 36,
+                [0xd2d0d1] = 36,
+                [0xeae7dd] = 36,
                 //[0xa3a3a3] = 43,
                 //[0xc8c1b8] = 43,
-               // [0xaaa69a] = 43,
+                // [0xaaa69a] = 43,
+                [0x9d481f] = 46,
                 [0x000000] = 49,
                 [0x2c2528] = 49,
                 [0x251f2c] = 49,

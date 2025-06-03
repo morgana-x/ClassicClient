@@ -42,7 +42,7 @@ namespace ClassicConnect
             CompressedStream.Position = 0;
             MemoryStream uncompressed = new MemoryStream();
             GZip.Decompress(CompressedStream, uncompressed, false);
-            Data = new byte[uncompressed.Length];
+            Data = new byte[width * height * length];
             uncompressed.Position = 0;
             uncompressed.Read(Data);
 
