@@ -57,7 +57,7 @@ public partial class Program
                 name = lines[0].Trim();
             if (lines.Length > 1 )
                 password = lines[1].Trim();
-            if (lines.Length > 3)
+            if (lines.Length > 2)
                 remember_token = lines[2].Trim();
         }
         else
