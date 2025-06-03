@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ClassicConnect
 {
@@ -186,6 +187,21 @@ namespace ClassicConnect
         public static short Lerp(short s, short f, float b)
         {
             return (short)((float)s + ((float)(s - f) / (float)b));
+        }
+
+        //https://stackoverflow.com/questions/223832/check-a-string-to-see-if-all-characters-are-hexadecimal-values
+        public static bool IsHex(string text)
+        {
+            if (text == "localhost") return false;
+            for(var i = 0; i < text.Length; i++)
+                {
+                var current = text[i];
+                if (!(Char.IsDigit(current) || (current >= 'a' && current <= 'f')))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

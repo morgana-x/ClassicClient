@@ -41,16 +41,46 @@ public partial class Program
     }
     public static void Main(string[] args)
     {
-        string name = "morgana2";
+        string name = "somenamehere";
         string password = "";
         string remember_token = "";
-        string logindetailpath = Path.Join(Directory.GetCurrentDirectory(), "login.txt");
+
+        string logindetailpath = Path.Join(Directory.GetCurrentDirectory(), "account.txt");
+
+        string server_ip = args.Length > 0 ? args[0] : "";
+        string mp_pass = "";
         if (File.Exists(logindetailpath))
         {
             string[] lines = File.ReadAllLines(logindetailpath);
-            name = lines[0].Trim();
-            password = lines[1].Trim();
-            remember_token = lines[2].Trim();
+
+            if (lines.Length > 0)
+                name = lines[0].Trim();
+            if (lines.Length > 1 )
+                password = lines[1].Trim();
+            if (lines.Length > 3)
+                remember_token = lines[2].Trim();
+        }
+        else
+            File.WriteAllText(logindetailpath, "name_here\n\nclassicube_remember_token_here");
+
+        string serverdetailpath = Path.Join(Directory.GetCurrentDirectory(), "server.txt");
+        if (File.Exists(serverdetailpath))
+        {
+            string[] lines = File.ReadAllLines(serverdetailpath);
+
+            if (lines.Length > 0)
+                server_ip = lines[0].Trim();
+            if (lines.Length > 1)
+                mp_pass = lines[1].Trim();
+        }
+        else
+            File.WriteAllText(serverdetailpath, "127.0.0.1:25565\nmp_pass_here");
+
+        if(server_ip == "")
+        {
+            Console.WriteLine("Please enter the ip addess of the server");
+            Console.WriteLine("x.x.x.x:25565 etc or hash value / id of classicube server");
+            server_ip = Console.ReadLine();
         }
 
         ClassicClient client = password=="" ? new ClassicClient(name) : new ClassicClient(name, password, remember_token);
@@ -65,7 +95,7 @@ public partial class Program
         client.Events.LevelEvents.SetBlockEvent += OnBlockPlace;
 
 
-        bool result = client.ConnectClassicube("5bd63bee8f109bbf619234e5d533b445"); //client.Connect("131.161.69.89",25566);
+        bool result = Util.IsHex(server_ip) ? client.ConnectClassicube(server_ip) : client.Connect(server_ip, mp_pass); //client.ConnectClassicube("16ac7ccf5b3a454e7681b2b0ea5d5aa2"); //client.Connect("131.161.69.89",25566);
 
         if (!result)
         {
