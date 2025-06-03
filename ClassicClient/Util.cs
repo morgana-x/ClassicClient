@@ -143,9 +143,19 @@ namespace ClassicConnect
                 target[i+index] = insert[i];
         }
 
-        public static float[] DirVec(byte pitch, byte yaw)
+
+        public static float[] GetLookVector(byte Yaw, byte Pitch)
         {
-            return new float[3] { 0, 0, 0 };
+            const double packed2Rad = (2 * Math.PI) / 256.0;
+
+            double yaw = Yaw * packed2Rad;
+            double pitch = Pitch * packed2Rad;
+
+            float x = (float)(Math.Sin(yaw) * Math.Cos(pitch));
+            float y = (float)-Math.Sin(pitch);
+            float z = (float)(-Math.Cos(yaw) * Math.Cos(pitch));
+            return new float[] { x, y, z };
         }
+    
     }
 }

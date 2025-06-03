@@ -11,6 +11,8 @@ namespace ClassicConnect.Command.Commands.Fun
     {
         public override string Name => "hollowpurple";
 
+        public override int RankRequired => 100;
+
         private async void PlaceSphere(ClassicClient client, short x, short y, short z, byte b, int r = 3)
         {
             client.LocalPlayer.X = (short)(x << 5);
@@ -26,7 +28,7 @@ namespace ClassicConnect.Command.Commands.Fun
                         if (client.Level.GetBlock((short)(x+bx), (short)(y+by), (short)(z+bz)) ==b) continue;
                         modified = true;
                         client.ModifyBlock((short)(x + bx), (short)(y + by), (short)(z + bz), b);
-                        Thread.Sleep(5);
+                        Thread.Sleep(1);
                     }
             if (modified) Thread.Sleep(10);
         }
@@ -37,7 +39,7 @@ namespace ClassicConnect.Command.Commands.Fun
         private async void BreakOrb(ClassicClient client, short x, short y, short z)
         {
 
-            PlaceSphere(client, x, y, z, 0,8);
+            PlaceSphere(client, x, y, z, 0, 10);
         }
         private async Task rant(ClassicClient client)
         {
@@ -58,9 +60,9 @@ namespace ClassicConnect.Command.Commands.Fun
                 await this.rant(client);
             short[] orbpos = new short[] { x, y, z };
             short[] oldorbpos = new short[] { x, y, z };
-            float[] dir = new float[] { 2f, 0f, 0f };// Util.DirVec(pitch, yaw);
+            var dir = Util.GetLookVector(yaw, pitch); // new float[] { 2f, 0f, 0f };// Util.DirVec(pitch, yaw);
             int d = 0;
-            while (!client.Level.Loading && client.Level.ValidPos(orbpos) && d < 12)
+            while (!client.Level.Loading && client.Level.ValidPos(orbpos) && d < 20)
             {
                 d++;
               
@@ -69,7 +71,7 @@ namespace ClassicConnect.Command.Commands.Fun
                 for (int i = 0; i < 3; i++)
                 {
                     oldorbpos[i] = orbpos[i];
-                    orbpos[i] += (short)dir[i];
+                    orbpos[i] += (short)(dir[i] * 2);
                 }
             }
             BreakOrb(client, orbpos[0], orbpos[1], orbpos[2]);

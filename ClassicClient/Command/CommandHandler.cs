@@ -13,6 +13,7 @@ namespace ClassicConnect.Command
             this.Client = client;
 
             RegisterCommand(new Commands.Movement.Summon());
+            RegisterCommand(new Commands.Movement.Teleport());
             RegisterCommand(new Commands.Admin.SetRank());
             RegisterCommand(new Commands.Admin.CancelTasks());
             RegisterCommand(new Commands.Fun.HollowPurple());

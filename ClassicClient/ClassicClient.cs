@@ -126,6 +126,7 @@ namespace ClassicConnect
         public void PlaceBlock(short x, short y, short z, byte block)
         {
             if (!Level.ValidPos(x, y, z)) return;
+            if (Level.GetBlock(x, y, z) == block) return;
             Level.SetBlock(x, y, z, block);
             SendBytes(Network.Level.SetBlock.GetBytes(x, y, z, block, false));
         }
@@ -166,7 +167,7 @@ namespace ClassicConnect
             {
                 if (DateTime.Now > nextSendPosition && !Level.Loading)
                 {
-                    nextSendPosition = DateTime.Now.AddMilliseconds(20);
+                    nextSendPosition = DateTime.Now.AddMilliseconds(40);
                     SendBytes(Network.Player.Teleport.GetBytes(LocalPlayer));
                 }
             }

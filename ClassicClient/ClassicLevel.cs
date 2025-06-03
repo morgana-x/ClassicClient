@@ -51,12 +51,17 @@ namespace ClassicConnect
             Console.WriteLine($"Loaded level of size {width} {height} {length}");
         }
 
+        public int PackCoords(short x, short y, short z)
+        {
+            return (((y) * Length + (z)) * Width + (x));
+        }
+
         public short GetBlock(short x, short y, short z)
         {
             if (Loading) return 0;
             if (x < 0 || y < 0 || z < 0) return 0;
             if (x >= Width || y >= Height || z >= Length) return 0;
-            return (short)(Data[x * Width + z * Width * Height + y]);
+            return (short)(Data[PackCoords(x, y, z)]);
         }
 
         public void SetBlock(int indice, byte block)
@@ -78,7 +83,7 @@ namespace ClassicConnect
             if (Loading) return;
             if (x < 0 || y < 0 || z < 0) return;
             if (x >= Width || y >= Height || z >= Length) return;
-            Data[x * Width + z * Width * Height + y] = block;
+            Data[PackCoords(x, y, z)] = block;
         }
 
         public void SetEnvColor(byte id, short r, short g, short b)
