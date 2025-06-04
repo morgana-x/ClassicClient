@@ -92,7 +92,7 @@ namespace ClassicConnect.Command.Commands.Building
                     client.LocalPlayer.SetBlockPosition(bx, (short)(by + 1), bz);
                     client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
                     client.PlaceBlock(bx, by, bz, block);
-                    Thread.Sleep(50);
+                    Thread.Sleep(65);
                 }
             }
         }
@@ -153,6 +153,7 @@ namespace ClassicConnect.Command.Commands.Building
                 [0xf7e8d9] = 12,
                 [0xf0e8d7] = 12,
                 [0xf0e8de] = 12,
+                [0xf8c8bf] = 12,
                // [0xc7a28f] = 12,
                 //[0xebd4c6] = 12,
                 // [0xefd9c9] = 12,
@@ -208,6 +209,8 @@ namespace ClassicConnect.Command.Commands.Building
                 [0xca48a3] = 33,
                 [0xd381c2] = 33,
                 [0xd54bad] = 33,
+                [0xfd72ac] = 33,
+                [0xfb7292] = 33,
                 [0x202020] = 34,
                 [0x584f56] = 34,
                 [0x305a56] = 34,
@@ -282,9 +285,9 @@ namespace ClassicConnect.Command.Commands.Building
                 Array.Reverse(colour);
                 colour = new byte[4] { colour[1], colour[2], colour[3], 255 };
                 uint colorInt =  BitConverter.ToUInt32(colour);
-                if (ImageBlock.ContainsKey(colorInt)) return ImageBlock[colorInt];
                 if (Cache.ContainsKey(colorInt)) return Cache[colorInt];
-                Console.WriteLine(string.Join(",", colour));
+                if (ImageBlock.ContainsKey(colorInt)) return ImageBlock[colorInt];
+               // Console.WriteLine(string.Join(",", colour));
                 foreach (var pair in ImageBlock)
                 {
                     var keybytes = BitConverter.GetBytes(pair.Key).ToArray();
@@ -297,6 +300,7 @@ namespace ClassicConnect.Command.Commands.Building
                     closestDist = dist;
                     block = pair.Value;
                 }
+                Cache.Add(colorInt, block);
                 return block;
             }
         }
