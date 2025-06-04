@@ -203,5 +203,20 @@ namespace ClassicConnect
             }
             return true;
         }
+
+        public static string RemoveColour(string text)
+        {
+            string newText = "";
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] == '&' && i < text.Length - 1)
+                {
+                    i += 1;
+                    continue;
+                }
+                newText += text[i];
+            }
+            return newText;
+        }
     }
 }

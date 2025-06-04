@@ -85,8 +85,8 @@ namespace ClassicConnect.Command
 
             if (message.StartsWith("&"))
                 message = message.Substring(2);
-            if (playername.StartsWith("&"))
-                playername = playername.Substring(2);
+            if (playername.Contains("&"))
+                playername = Util.RemoveColour(playername);
 
 
             HandleMessage(playername, message, ev.PlayerId);

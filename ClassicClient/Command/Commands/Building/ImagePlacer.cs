@@ -78,7 +78,7 @@ namespace ClassicConnect.Command.Commands.Building
                     if (by > client.Level.Height) continue;
                     if (by < 0) continue;
 
-                    var bytearray = new byte[4] { (byte)(((float)color.R / (float)ushort.MaxValue) * 255), (byte)(((float)color.G / (float)ushort.MaxValue) * 255), (byte)(((float)color.B / (float)ushort.MaxValue) * 255), (byte)255 };
+                    var bytearray = new byte[4] { (byte)(((float)color.B / (float)ushort.MaxValue) * 255), (byte)(((float)color.G / (float)ushort.MaxValue) * 255), (byte)(((float)color.R / (float)ushort.MaxValue) * 255), (byte)255 };
                     byte block = ImageConverter.GetNearestBlock(bytearray);
 
                     if (client.Level.GetBlock(bx, y, bz) == block) continue;
@@ -282,8 +282,6 @@ namespace ClassicConnect.Command.Commands.Building
             {
                 byte block = 49;
                 int closestDist = int.MaxValue;
-                Array.Reverse(colour);
-                colour = new byte[4] { colour[1], colour[2], colour[3], 255 };
                 uint colorInt =  BitConverter.ToUInt32(colour);
                 if (Cache.ContainsKey(colorInt)) return Cache[colorInt];
                 if (ImageBlock.ContainsKey(colorInt)) return ImageBlock[colorInt];
