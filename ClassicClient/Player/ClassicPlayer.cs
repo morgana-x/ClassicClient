@@ -19,16 +19,10 @@
         public volatile byte Pitch = 0;
 
         // https://github.com/ClassiCube/MCGalaxy/blob/master/MCGalaxy/util/Math/DirUtils.cs
-        public double[] LookVector { get {
-                const double packed2Rad = (2 * Math.PI) / 256.0;
-
-                double yaw = Yaw * packed2Rad;
-                double pitch = Pitch * packed2Rad;
-
-                double x = Math.Sin(yaw) * Math.Cos(pitch);
-                double y = -Math.Sin(pitch);
-                double z = -Math.Cos(yaw) * Math.Cos(pitch);
-                return new double[] { x, y, z };
+        public float[] LookVector { get
+            {
+                return Util.GetLookVector(Yaw, Pitch);
+            
             } }
 
         public bool LocalPlayer => ID == -1;

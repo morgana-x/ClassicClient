@@ -16,7 +16,10 @@ namespace ClassicConnect.Command
             RegisterCommand(new Commands.Admin.SetRank());
             RegisterCommand(new Commands.Admin.CancelTasks());
             RegisterCommand(new Commands.Fun.HollowPurple());
-            RegisterCommand(new Commands.Building.OneBlockTower());
+            RegisterCommand(new Commands.Grief.OneBlockTower());
+            RegisterCommand(new Commands.Grief.Wow());
+            RegisterCommand(new Commands.Grief.Spike());
+            RegisterCommand(new Commands.Grief.Burn());
             RegisterCommand(new Commands.Building.ImagePlacer());
 
             client.Events.PlayerEvents.ChatEvent += this.OnMessage;
@@ -57,12 +60,12 @@ namespace ClassicConnect.Command
                     break;
                 }
             }
-            if (!cmd) return false;
+            if (!cmd) return true;
             command = command.Substring(1);
 
             if (!Commands.ContainsKey(command))
             {
-                return false;
+                return true;
             }
 
             split.RemoveAt(0);

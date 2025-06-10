@@ -152,10 +152,10 @@ namespace ClassicConnect
             double yaw = Yaw * packed2Rad;
             double pitch = Pitch * packed2Rad;
 
-            float x = (float)(Math.Sin(yaw) * Math.Cos(pitch));
-            float y = (float)-Math.Sin(pitch);
-            float z = (float)(-Math.Cos(yaw) * Math.Cos(pitch));
-            return new float[] { x, y, z };
+            double x = (Math.Sin(yaw) * Math.Cos(pitch));
+            double y = -Math.Sin(pitch);
+            double z = (-Math.Cos(yaw) * Math.Cos(pitch));
+            return new float[] { (float)x, (float)y, (float)z };
         }
 
         //https://github.com/ClassiCube/MCGalaxy/blob/master/MCGalaxy/util/Math/DirUtils.cs
@@ -217,6 +217,26 @@ namespace ClassicConnect
                 newText += text[i];
             }
             return newText;
+        }
+
+        public static async void PlaceSphere(ClassicClient client, short x, short y, short z, byte b, int r = 3)
+        {
+            client.LocalPlayer.X = (short)(x << 5);
+            client.LocalPlayer.Y = (short)(y << 5);
+            client.LocalPlayer.Z = (short)(z << 5);
+
+            bool modified = false;
+            for (int bx = -r / 2; bx <= r / 2; bx++)
+                for (int by = -r / 2; by <= r / 2; by++)
+                    for (int bz = -r / 2; bz <= r / 2; bz++)
+                    {
+                        if (Math.Abs(bx) + Math.Abs(by) + Math.Abs(bz) >= r - 1) continue;
+                        if (client.Level.GetBlock((short)(x + bx), (short)(y + by), (short)(z + bz)) == b) continue;
+                        modified = true;
+                        client.ModifyBlock((short)(x + bx), (short)(y + by), (short)(z + bz), b);
+                        Thread.Sleep(20);
+                    }
+            if (modified) Thread.Sleep(25);
         }
     }
 }

@@ -8,43 +8,25 @@ namespace ClassicConnect.Command.Commands.Fun
 
         public override int RankRequired => 100;
 
-        private async void PlaceSphere(ClassicClient client, short x, short y, short z, byte b, int r = 3)
-        {
-            client.LocalPlayer.X = (short)(x << 5);
-            client.LocalPlayer.Y = (short)(y << 5);
-            client.LocalPlayer.Z = (short)(z << 5);
-
-            bool modified = false;
-            for (int bx = -r/2; bx <= r/2; bx++)
-                for (int by = -r/2; by <= r/2; by++)
-                    for (int bz = -r/2; bz <= r/2; bz++)
-                    {
-                        if (Math.Abs(bx) + Math.Abs(by) + Math.Abs(bz) >= r-1) continue;
-                        if (client.Level.GetBlock((short)(x+bx), (short)(y+by), (short)(z+bz)) ==b) continue;
-                        modified = true;
-                        client.ModifyBlock((short)(x + bx), (short)(y + by), (short)(z + bz), b);
-                        Thread.Sleep(20);
-                    }
-            if (modified) Thread.Sleep(25);
-        }
+  
         private async void PlaceOrb(ClassicClient client, short x, short y, short z)
         {
-             PlaceSphere(client, x, y, z, 30, 3);
+             Util.PlaceSphere(client, x, y, z, 30, 3);
         }
         private async void BreakOrb(ClassicClient client, short x, short y, short z, int size=10)
         {
 
-            PlaceSphere(client, x, y, z, 0, size);
+            Util.PlaceSphere(client, x, y, z, 0, size);
         }
 
-        private async Task DoHollowPurple(ClassicClient client, short x, short y, short z, byte yaw, byte pitch, int size, int range)
+        private async Task DoHollowPurple(ClassicClient client, short x, short y, short z, float[] dir, int size, int range)
         {
             client.Building = true;
             try
             {
                 short[] orbpos = new short[] { x, y, z };
                 short[] oldorbpos = new short[] { x, y, z };
-                var dir = Util.GetLookVector(yaw, pitch); // new float[] { 2f, 0f, 0f };// Util.DirVec(pitch, yaw);
+                //var dir = dir;//Util.GetLookVector(yaw, pitch); // new float[] { 2f, 0f, 0f };// Util.DirVec(pitch, yaw);
                 int d = 0;
                 while (!client.Level.Loading && client.Level.ValidPos(orbpos) && d < range && client.Building)
                 {
@@ -79,7 +61,7 @@ namespace ClassicConnect.Command.Commands.Fun
                 return false;
 
             Task.Run(() => { 
-                DoHollowPurple(client, executor.BlockX, executor.BlockY, executor.BlockZ, executor.Yaw, executor.Pitch, size, range); 
+                DoHollowPurple(client, executor.BlockX, executor.BlockY, executor.BlockZ, executor.LookVector, size, range); 
             },
                  client.cancelToken.Token);
             return true;

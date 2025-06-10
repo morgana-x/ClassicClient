@@ -1,6 +1,6 @@
 ﻿using ClassicConnect.Player;
 
-namespace ClassicConnect.Command.Commands.Building
+namespace ClassicConnect.Command.Commands.Grief
 {
     internal class OneBlockTower : Command
     {
@@ -15,7 +15,7 @@ namespace ClassicConnect.Command.Commands.Building
             }
             return (byte)Util.Random.Next(12, 47);
         }
-        private async void OneBlockBuild(ClassicClient client,short x, short y, short z, short height=50)
+        private async void OneBlockBuild(ClassicClient client, short x, short y, short z, short height = 50)
         {
             for (int i = 0; i < height; i++)
             {
@@ -39,7 +39,8 @@ namespace ClassicConnect.Command.Commands.Building
             if (height < 0)
                 height = 20;
 
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 client.Building = true;
                 try
                 {

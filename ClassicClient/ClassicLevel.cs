@@ -53,7 +53,7 @@ namespace ClassicConnect
 
         public int PackCoords(short x, short y, short z)
         {
-            return (((y) * Length + (z)) * Width + (x));
+            return x + (z * Width) + (y * Width * Length);////(((y) * Length + (z)) * Width + (x));
         }
 
         public short GetBlock(short x, short y, short z)
