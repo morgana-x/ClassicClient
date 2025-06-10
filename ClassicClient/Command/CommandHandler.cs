@@ -60,7 +60,7 @@ namespace ClassicConnect.Command
                     break;
                 }
             }
-            if (!cmd) return true;
+            if (!cmd) return false;
             command = command.Substring(1);
 
             if (!Commands.ContainsKey(command))
