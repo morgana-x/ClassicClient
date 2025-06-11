@@ -93,6 +93,7 @@ namespace ClassicConnect.Command.Commands.Building
                     client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
                     client.PlaceBlock(bx, by, bz, block);
                     Thread.Sleep(65);
+                    //Thread.Sleep(1);
                 }
             }
         }

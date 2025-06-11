@@ -21,6 +21,7 @@ namespace ClassicConnect.Command
             RegisterCommand(new Commands.Grief.Spike());
             RegisterCommand(new Commands.Grief.Burn());
             RegisterCommand(new Commands.Building.ImagePlacer());
+            RegisterCommand(new Commands.Building.BinPlacer());
 
             client.Events.PlayerEvents.ChatEvent += this.OnMessage;
 

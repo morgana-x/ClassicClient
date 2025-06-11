@@ -43,6 +43,7 @@ namespace ClassicConnect.Command.Commands.Grief
                         modified = true;
                         client.ModifyBlock(gx, gy, gz, Util.Random.Next(0, 10) == 1 ? (byte)54 : (byte)0);
                         Thread.Sleep(50);
+                        //Thread.Sleep(1);
                     }
             if (modified) Thread.Sleep(25);
             client.Building = false;
