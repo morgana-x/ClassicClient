@@ -49,12 +49,14 @@
             public short Y;
             public short Z;
             public short Block;
-            public SetBlockEventArgs(short x, short y, short z, short block)
+            public short PreviousBlock;
+            public SetBlockEventArgs(short x, short y, short z, short oldblock, short block)
             {
                 this.X = x;
                 this.Y = y;
                 this.Z = z;
                 this.Block = block;
+                this.PreviousBlock = oldblock;
             }
         }
         public event EventHandler<SetBlockEventArgs> SetBlockEvent;

@@ -32,7 +32,7 @@ public partial class Program
 
     private static void OnBlockPlace(object? sender, ClassicConnect.Event.LevelEvents.SetBlockEventArgs ev)
     {
-        Console.WriteLine($"Block {ev.X} {ev.Y} {ev.Z} was set to {ev.Block}");
+       // Console.WriteLine($"Block {ev.X} {ev.Y} {ev.Z} was set to {ev.Block}");
     }
 
     private static void OnKick(object? sender, ClassicConnect.Event.CoreEvents.DisconnectEventArgs ev)

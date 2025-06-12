@@ -37,7 +37,7 @@ namespace ClassicConnect.Command.Commands.Building
                         client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
                         client.PlaceBlock(bx, by, bz, (byte)build.Blocks[index]);
                         index++;
-                         Thread.Sleep(30);
+                         Thread.Sleep(client.BuildDelay);
                         //Thread.Sleep(1);
                     }
 

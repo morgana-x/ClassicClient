@@ -234,7 +234,7 @@ namespace ClassicConnect
                         if (client.Level.GetBlock((short)(x + bx), (short)(y + by), (short)(z + bz)) == b) continue;
                         modified = true;
                         client.ModifyBlock((short)(x + bx), (short)(y + by), (short)(z + bz), b);
-                        Thread.Sleep(20);
+                        Thread.Sleep(client.BuildDelay);
                     }
             if (modified) Thread.Sleep(25);
         }

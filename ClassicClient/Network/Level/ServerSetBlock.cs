@@ -15,9 +15,9 @@ namespace ClassicConnect.Network.Level
                 position[i] = Util.ReadShort(data, i * 2);
 
             short block = data[6];
-
+            short oldblock = connection.Level.GetBlock(position[0], position[1],position[2]);
             connection.Level.SetBlock(position[0], position[1], position[2], (byte)block);
-            connection.Events.LevelEvents.OnSetBlock(new(position[0], position[1], position[2], block));
+            connection.Events.LevelEvents.OnSetBlock(new(position[0], position[1], position[2], oldblock, block));
         }
 
       

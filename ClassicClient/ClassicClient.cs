@@ -1,5 +1,4 @@
 ﻿using System.Net.Sockets;
-using System.Xml.Linq;
 using ClassicConnect.Command;
 using ClassicConnect.Event;
 using ClassicConnect.Network;
@@ -29,6 +28,8 @@ namespace ClassicConnect
         public CancellationTokenSource cancelToken = new CancellationTokenSource();
 
         public volatile bool Building = false;
+
+        public int BuildDelay = 30;
         public ClassicClient(string name)
         {
             Name = name;

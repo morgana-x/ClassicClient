@@ -92,7 +92,7 @@ namespace ClassicConnect.Command.Commands.Building
                     client.LocalPlayer.SetBlockPosition(bx, (short)(by + 1), bz);
                     client.SendBytes(Network.Player.Teleport.GetBytes(client.LocalPlayer));
                     client.PlaceBlock(bx, by, bz, block);
-                    Thread.Sleep(65);
+                    Thread.Sleep(client.BuildDelay);
                     //Thread.Sleep(1);
                 }
             }
@@ -155,7 +155,7 @@ namespace ClassicConnect.Command.Commands.Building
                 [0xf0e8d7] = 12,
                 [0xf0e8de] = 12,
                 [0xf8c8bf] = 12,
-               // [0xc7a28f] = 12,
+                // [0xc7a28f] = 12,
                 //[0xebd4c6] = 12,
                 // [0xefd9c9] = 12,
                 [0xff0000] = 21,
@@ -232,7 +232,7 @@ namespace ClassicConnect.Command.Commands.Building
                 [0xced8de] = 35,
                 [0xbfc9d1] = 35,
                 [0xbec8d0] = 35,
-               // [0x8b9ca2] = 35,
+                // [0x8b9ca2] = 35,
                 [0xc9d4da] = 35,
                 [0xc9cfd2] = 35,
                 [0x9fa9b1] = 35,
@@ -262,11 +262,17 @@ namespace ClassicConnect.Command.Commands.Building
                 [0x2a2728] = 49,
                 //[0x2f3633] = 49
 
-              //  [0xf9dccc] = 55
+                //  [0xf9dccc] = 55
 
             };
 
-            private static int distance(byte[] col1bytes, byte[] col2bytes)
+
+            static Dictionary<uint, byte> CPEImageBlock = new Dictionary<uint, byte>()
+            {
+                [0x1e02a3] = 58
+            };
+
+        private static int distance(byte[] col1bytes, byte[] col2bytes)
             {
                 //Array.Reverse(col1bytes);
                 int dist = 0;
@@ -284,6 +290,7 @@ namespace ClassicConnect.Command.Commands.Building
                 byte block = 49;
                 int closestDist = int.MaxValue;
                 uint colorInt =  BitConverter.ToUInt32(colour);
+                if (CPE.CPEEnabled && CPEImageBlock.ContainsKey(colorInt)) return CPEImageBlock[colorInt];
                 if (Cache.ContainsKey(colorInt)) return Cache[colorInt];
                 if (ImageBlock.ContainsKey(colorInt)) return ImageBlock[colorInt];
                // Console.WriteLine(string.Join(",", colour));
@@ -299,6 +306,19 @@ namespace ClassicConnect.Command.Commands.Building
                     closestDist = dist;
                     block = pair.Value;
                 }
+                if (CPE.CPEEnabled)
+                    foreach(var pair in CPEImageBlock)
+                    {
+                        var keybytes = BitConverter.GetBytes(pair.Key).ToArray();
+                        //   Console.WriteLine(string.Join(",", keybytes));
+                        if (colorInt == pair.Key)//(Enumerable.SequenceEqual(keybytes, colour))
+                            return pair.Value;
+                        int dist = distance(keybytes, colour);
+                        if (dist >= closestDist)
+                            continue;
+                        closestDist = dist;
+                        block = pair.Value;
+                    }
                 Cache.Add(colorInt, block);
                 return block;
             }
